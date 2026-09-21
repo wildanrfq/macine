@@ -162,13 +162,6 @@ export default function FilmCatalogView({
                   ? "Kisah Singkat"
                   : "Sinema Sorot";
 
-              const categoryLabel =
-                film.category === "DOCUMENTARY"
-                  ? "Dokumenter"
-                  : film.category === "SHORT"
-                  ? "Film Pendek"
-                  : "Film Panjang";
-
               return (
                 <article
                   key={film.id}
@@ -184,12 +177,6 @@ export default function FilmCatalogView({
                       loading="lazy"
                       className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                     />
-                    <div className="absolute top-3 left-3 bg-[#F49924] px-2.5 py-0.5 font-mono text-xs font-bold tracking-wider text-white shadow-sm">
-                      SEDANG TAYANG
-                    </div>
-                    <div className="absolute top-3 right-3 bg-ink/90 backdrop-blur-sm border border-line px-2 py-0.5 font-mono text-[10px] font-bold text-white shadow-sm">
-                      {categoryLabel.toUpperCase()}
-                    </div>
                   </div>
 
                   <div className="flex flex-1 flex-col justify-between p-4 sm:p-6">

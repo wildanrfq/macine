@@ -42,9 +42,6 @@ export default async function HomePage() {
                         unoptimized
                         className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                       />
-                      <div className="absolute top-3 left-3 bg-[#F49924] px-3 py-1 font-mono text-xs font-bold tracking-wider text-white shadow-sm">
-                        SEDANG TAYANG
-                      </div>
                     </div>
                   </div>
                 </div>
