@@ -20,7 +20,7 @@ export async function createQrisCharge(params: CreateQrisParams): Promise<QrisRe
   const merchantCode = process.env.DUITKU_MERCHANT_CODE;
   const apiKey = process.env.DUITKU_API_KEY;
   const isProduction = process.env.DUITKU_IS_PRODUCTION === "true";
-  const paymentMethod = process.env.DUITKU_PAYMENT_METHOD || "NQ";
+  const paymentMethod = process.env.DUITKU_PAYMENT_METHOD || "SP";
   const callbackUrl = process.env.DUITKU_CALLBACK_URL || "";
   const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
@@ -55,6 +55,7 @@ export async function createQrisCharge(params: CreateQrisParams): Promise<QrisRe
           Accept: "application/json",
         },
         body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(5000),
       });
 
       const data = await response.json();
