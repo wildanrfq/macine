@@ -9,14 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#121110",
-        paper: "#FAF8F5",
-        "paper-card": "#FFFFFF",
-        "paper-warm": "#F3EFEA",
-        reel: "#767069",
-        "reel-grey": "#767069",
-        line: "#E7E2D8",
-        spotlight: "#FFFFFF",
+        ink: "var(--ink)",
+        paper: "var(--paper)",
+        "paper-card": "var(--paper-card)",
+        "paper-warm": "var(--paper-warm)",
+        reel: "var(--reel)",
+        "reel-grey": "var(--reel)",
+        line: "var(--line)",
+        spotlight: "var(--spotlight)",
 
         // User custom brand palette
         "brand-blue": "#1D99DE",

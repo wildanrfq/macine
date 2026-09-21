@@ -1,14 +1,40 @@
 @import "tailwindcss";
 
+:root {
+  --ink: #121110;
+  --paper: #FAF8F5;
+  --paper-card: #FFFFFF;
+  --paper-warm: #F3EFEA;
+  --reel: #767069;
+  --reel-grey: #767069;
+  --line: #E7E2D8;
+  --spotlight: #FFFFFF;
+
+  --brand-blue: #1D99DE;
+  --brand-orange: #F49924;
+  --brand-magenta: #D21871;
+}
+
+.dark {
+  --ink: #F6F4EF;
+  --paper: #121110;
+  --paper-card: #1A1918;
+  --paper-warm: #22201E;
+  --reel: #A6A097;
+  --reel-grey: #A6A097;
+  --line: #2E2B28;
+  --spotlight: #242220;
+}
+
 @theme {
-  --color-ink: #121110;
-  --color-paper: #FAF8F5;
-  --color-paper-card: #FFFFFF;
-  --color-paper-warm: #F3EFEA;
-  --color-reel: #767069;
-  --color-reel-grey: #767069;
-  --color-line: #E7E2D8;
-  --color-spotlight: #FFFFFF;
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-paper-card: var(--paper-card);
+  --color-paper-warm: var(--paper-warm);
+  --color-reel: var(--reel);
+  --color-reel-grey: var(--reel-grey);
+  --color-line: var(--line);
+  --color-spotlight: var(--spotlight);
 
   --color-brand-blue: #1D99DE;
   --color-brand-orange: #F49924;
@@ -18,26 +44,46 @@
   --font-body: var(--font-body), "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-:root {
-  --color-ink: #121110;
-  --color-paper: #FAF8F5;
-  --color-paper-card: #FFFFFF;
-  --color-paper-warm: #F3EFEA;
-  --color-reel: #767069;
-  --color-line: #E7E2D8;
-  --color-spotlight: #FFFFFF;
-
-  --color-brand-blue: #1D99DE;
-  --color-brand-orange: #F49924;
-  --color-brand-magenta: #D21871;
-}
-
 body {
-  background-color: #FAF8F5;
-  color: #121110;
+  background-color: var(--paper);
+  color: var(--ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Dark mode overrides for explicit background utilities */
+.dark .bg-white {
+  background-color: var(--paper-card) !important;
+}
+
+.dark .bg-\[\#FAF8F5\] {
+  background-color: var(--paper-warm) !important;
+}
+
+.dark .bg-\[\#FDFBF7\] {
+  background-color: var(--paper) !important;
+}
+
+.dark input,
+.dark textarea,
+.dark select {
+  color: var(--ink);
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #8A857D;
+}
+
+.dark .shadow-warm,
+.dark .shadow-warm-lg {
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.6), 0 2px 8px -1px rgba(0, 0, 0, 0.4);
+}
+
+.dark .ambient-cinema-glow {
+  opacity: 0.35;
 }
 
 @keyframes ambientGlow {
@@ -49,8 +95,4 @@ body {
     opacity: 0.85;
     transform: scale(1.05);
   }
-}
-
-.ambient-cinema-glow {
-  animation: ambientGlow 8s ease-in-out infinite;
 }

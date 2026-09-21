@@ -20,13 +20,36 @@ export const metadata: Metadata = {
   description: "Ruang putar film alternatif, kurasi sinema terpilih, dan pemesanan tiket.",
 };
 
+const themeInitScript = `
+  (function() {
+    try {
+      var theme = localStorage.getItem('theme');
+      var isNightTime = new Date().getHours() >= 18 || new Date().getHours() < 6;
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var isDark = theme === 'dark' || (!theme && (isNightTime || prefersDark));
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    } catch (e) {}
+  })();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${displayFont.variable} ${bodyFont.variable}`}>
+    <html
+      lang="id"
+      suppressHydrationWarning
+      className={`${displayFont.variable} ${bodyFont.variable}`}
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="min-h-screen bg-paper text-ink selection:bg-ink selection:text-paper">
         {children}
       </body>

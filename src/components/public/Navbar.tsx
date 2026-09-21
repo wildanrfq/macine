@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import UserNavMenu from "./UserNavMenu";
+import ThemeToggle from "./ThemeToggle";
 
 type AuthUser = {
   id: string;
@@ -69,7 +70,7 @@ export default function Navbar({ initialUser }: NavbarProps) {
           </div>
         </Link>
 
-        <nav className="flex items-center gap-5 text-sm font-medium">
+        <nav className="flex items-center gap-4 text-sm font-medium">
           <Link
             href="/films"
             className="text-ink transition-colors hover:text-[#1D99DE]"
@@ -82,6 +83,8 @@ export default function Navbar({ initialUser }: NavbarProps) {
           >
             Tentang
           </Link>
+
+          <ThemeToggle />
 
           {user ? (
             <UserNavMenu user={user} />
