@@ -19,8 +19,6 @@ async function main() {
       rating: "17+",
       genre: "Drama",
       posterUrl: "/posters/drive-my-car.jpg",
-      backdropUrl:
-        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop",
       price: 50000,
       isNowShowing: true,
       isComingSoon: false,
@@ -39,8 +37,6 @@ async function main() {
       rating: "13+",
       genre: "Drama, Keluarga",
       posterUrl: "/posters/like-father-like-son.jpg",
-      backdropUrl:
-        "https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=1200&auto=format&fit=crop",
       price: 45000,
       isNowShowing: true,
       isComingSoon: false,
@@ -59,8 +55,6 @@ async function main() {
       rating: "13+",
       genre: "Drama",
       posterUrl: "/posters/aftersun.jpg",
-      backdropUrl:
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop",
       price: 45000,
       isNowShowing: true,
       isComingSoon: false,

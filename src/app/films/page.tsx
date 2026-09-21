@@ -52,34 +52,22 @@ export default async function FilmsPage() {
               </span>
             </div>
 
-            <div className="mt-8 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
-              {nowShowing.map((film, index) => {
-                const isLarge = index === 0;
-                return (
-                  <article
-                    key={film.id}
-                    className={`flex flex-col border border-line bg-white shadow-warm transition-shadow hover:shadow-warm-lg ${
-                      isLarge ? "md:col-span-2 lg:col-span-2" : ""
-                    }`}
-                  >
-                    <div
-                      className={`relative w-full overflow-hidden bg-ink ${
-                        isLarge ? "aspect-[16/9]" : "aspect-[3/4]"
-                      }`}
-                    >
-                      <img
-                        src={
-                          isLarge && film.backdropUrl
-                            ? film.backdropUrl
-                            : film.posterUrl
-                        }
-                        alt={film.title}
-                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                      />
-                      <div className="absolute top-3 left-3 bg-[#F49924] px-2.5 py-0.5 font-mono text-xs font-bold tracking-wider text-white shadow-sm">
-                        Layar Utama
-                      </div>
+            <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {nowShowing.map((film) => (
+                <article
+                  key={film.id}
+                  className="flex flex-col border border-line bg-white shadow-warm transition-shadow hover:shadow-warm-lg"
+                >
+                  <div className="relative aspect-[3/4] w-full overflow-hidden bg-ink">
+                    <img
+                      src={film.posterUrl}
+                      alt={film.title}
+                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                    />
+                    <div className="absolute top-3 left-3 bg-[#F49924] px-2.5 py-0.5 font-mono text-xs font-bold tracking-wider text-white shadow-sm">
+                      SEDANG TAYANG
                     </div>
+                  </div>
 
                     <div className="flex flex-1 flex-col justify-between p-6">
                       <div>
@@ -162,8 +150,7 @@ export default async function FilmsPage() {
                       </div>
                     </div>
                   </article>
-                );
-              })}
+                ))}
             </div>
           </section>
 

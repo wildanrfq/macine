@@ -29,7 +29,6 @@ model Film {
   rating          String     @default("13+")
   genre           String
   posterUrl       String
-  backdropUrl     String?
   price           Int        @default(45000)
   isNowShowing    Boolean    @default(true)
   isComingSoon    Boolean    @default(false)
