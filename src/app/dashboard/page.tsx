@@ -77,7 +77,17 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
   return (
     <div className="flex min-h-screen flex-col bg-paper text-ink">
-      <Navbar />
+      <Navbar
+        initialUser={
+          user
+            ? {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+              }
+            : null
+        }
+      />
 
       <main className="flex-1 py-12">
         <div className="mx-auto max-w-5xl px-6">

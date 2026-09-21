@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
+import { setCachedUser } from "@/lib/auth-client";
 
 function RegisterForm() {
   const router = useRouter();
@@ -37,6 +38,7 @@ function RegisterForm() {
         throw new Error(data.error || "Gagal mendaftar.");
       }
 
+      setCachedUser(data.user);
       router.push(redirect);
       router.refresh();
     } catch (err: unknown) {

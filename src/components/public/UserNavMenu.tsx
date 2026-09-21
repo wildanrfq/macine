@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { logoutClient } from "@/lib/auth-client";
 
 interface UserNavMenuProps {
   user: {
@@ -28,10 +29,10 @@ export default function UserNavMenu({ user }: UserNavMenuProps) {
   }, []);
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
     setIsOpen(false);
-    router.push("/");
+    await logoutClient();
     router.refresh();
+    router.push("/");
   };
 
   const initial = user.name.charAt(0).toUpperCase();

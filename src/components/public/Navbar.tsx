@@ -4,50 +4,46 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import UserNavMenu from "./UserNavMenu";
 import ThemeToggle from "./ThemeToggle";
-
-type AuthUser = {
-  id: string;
-  name: string;
-  email: string;
-} | null;
-
-let cachedUser: AuthUser | undefined = undefined;
+import {
+  AuthUser,
+  getCachedUser,
+  setCachedUser,
+  subscribeAuth,
+  fetchCurrentUser,
+} from "@/lib/auth-client";
 
 interface NavbarProps {
   initialUser?: AuthUser;
 }
 
 export default function Navbar({ initialUser }: NavbarProps) {
-  const [user, setUser] = useState<AuthUser>(initialUser ?? cachedUser ?? null);
+  const [user, setUser] = useState<AuthUser>(() => {
+    if (initialUser !== undefined) {
+      setCachedUser(initialUser);
+      return initialUser;
+    }
+    return getCachedUser() ?? null;
+  });
 
   useEffect(() => {
     if (initialUser !== undefined) {
       setUser(initialUser);
-      cachedUser = initialUser;
+      setCachedUser(initialUser);
       return;
     }
 
-    if (cachedUser !== undefined) {
-      setUser(cachedUser);
-      return;
-    }
+    const unsubscribe = subscribeAuth((updatedUser) => {
+      setUser(updatedUser);
+    });
 
-    let isMounted = true;
-    fetch("/api/auth/me")
-      .then((res) => (res.ok ? res.json() : { user: null }))
-      .then((data) => {
-        const fetchedUser: AuthUser = data.user ?? null;
-        cachedUser = fetchedUser;
-        if (isMounted) {
-          setUser(fetchedUser);
-        }
-      })
-      .catch(() => {
-        cachedUser = null;
-      });
+    if (getCachedUser() === undefined) {
+      fetchCurrentUser();
+    } else {
+      setUser(getCachedUser() ?? null);
+    }
 
     return () => {
-      isMounted = false;
+      unsubscribe();
     };
   }, [initialUser]);
 
