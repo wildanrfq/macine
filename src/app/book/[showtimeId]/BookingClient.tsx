@@ -212,11 +212,39 @@ export default function BookingClient({
   };
 
   return (
-    <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
+    <div className="grid grid-cols-1 gap-8 lg:gap-12 lg:grid-cols-12">
       {/* Main Booking Panel */}
       <div className="lg:col-span-8">
-        {/* Step Indicator */}
-        <div className="flex border-b border-line pb-4 text-xs font-mono">
+        {/* Mobile Step Indicator */}
+        <div className="sm:hidden border-b border-line pb-4">
+          <div className="flex items-center justify-between text-xs font-mono">
+            <span className="font-bold text-[#D21871]">
+              Langkah 0{step} / 04
+            </span>
+            <span className="text-reel">
+              {step === 1
+                ? "Jumlah Tiket"
+                : step === 2
+                ? "Data Pemesan"
+                : step === 3
+                ? "Bayar QRIS"
+                : "Tiket Digital"}
+            </span>
+          </div>
+          <div className="mt-2.5 grid grid-cols-4 gap-1.5">
+            {[1, 2, 3, 4].map((s) => (
+              <div
+                key={s}
+                className={`h-1.5 rounded-full transition-colors ${
+                  s <= step ? "bg-[#D21871]" : "bg-line"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop Step Indicator */}
+        <div className="hidden sm:flex border-b border-line pb-4 text-xs font-mono">
           <div
             className={`flex items-center gap-2 pr-6 ${
               step === 1 ? "font-bold text-[#D21871]" : "text-reel"
@@ -291,10 +319,10 @@ export default function BookingClient({
 
         {/* STEP 1: Ticket Quantity Selector (Free-Seating) */}
         {step === 1 && (
-          <div className="mt-8">
-            <div className="flex items-baseline justify-between border-b border-line pb-4">
+          <div className="mt-6 sm:mt-8">
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-line pb-4 gap-2">
               <div>
-                <h2 className="font-display text-3xl font-bold text-ink">
+                <h2 className="font-display text-2xl sm:text-3xl font-bold text-ink">
                   Tentukan Jumlah Tiket
                 </h2>
                 <p className="mt-1 text-xs text-reel">
@@ -303,7 +331,7 @@ export default function BookingClient({
                 </p>
               </div>
 
-              <div className="font-mono text-xs text-right">
+              <div className="font-mono text-xs text-left sm:text-right">
                 <span className="text-reel block">Status Kuota</span>
                 <span
                   className={`font-bold ${
@@ -316,8 +344,8 @@ export default function BookingClient({
             </div>
 
             {remainingTickets > 0 ? (
-              <div className="mt-8 space-y-8">
-                <div className="border border-line bg-white p-6 sm:p-8 shadow-warm">
+              <div className="mt-6 sm:mt-8 space-y-6 sm:space-y-8">
+                <div className="border border-line bg-white p-5 sm:p-8 shadow-warm">
                   <div className="flex flex-col justify-between sm:flex-row sm:items-center gap-6">
                     <div>
                       <span className="border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2 py-0.5 font-mono text-xs font-semibold text-[#1277B0]">
@@ -403,7 +431,7 @@ export default function BookingClient({
                   <button
                     type="button"
                     onClick={() => setStep(2)}
-                    className="bg-[#D21871] px-8 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#B4115F] hover:shadow-lg"
+                    className="w-full sm:w-auto text-center bg-[#D21871] px-6 sm:px-8 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#B4115F] hover:shadow-lg"
                   >
                     Lanjutkan ke Data Pemesan ({ticketCount} Tiket)
                   </button>
@@ -492,11 +520,11 @@ export default function BookingClient({
                 />
               </div>
 
-              <div className="mt-8 flex items-center justify-between border-t border-line pt-6">
+              <div className="mt-8 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 border-t border-line pt-6">
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="border border-line bg-white px-4 py-2 text-xs font-mono text-reel hover:border-[#1D99DE] hover:text-[#1D99DE]"
+                  className="border border-line bg-white px-4 py-2.5 text-xs font-mono text-reel hover:border-[#1D99DE] hover:text-[#1D99DE] text-center"
                 >
                   ← Ubah Jumlah Tiket
                 </button>
@@ -504,7 +532,7 @@ export default function BookingClient({
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="bg-[#D21871] px-8 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#B4115F] disabled:opacity-50"
+                  className="bg-[#D21871] px-8 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#B4115F] disabled:opacity-50 text-center"
                 >
                   {isLoading ? "Memproses..." : "Bayar"}
                 </button>
@@ -643,9 +671,9 @@ export default function BookingClient({
 
         {/* STEP 4: Perforated Digital Ticket Stub (Free-Seating) */}
         {step === 4 && booking && (
-          <div className="mt-8">
-            <div className="border-2 border-line bg-white text-ink p-6 sm:p-8 relative shadow-warm-lg">
-              <div className="flex flex-col justify-between border-b border-line pb-6 sm:flex-row sm:items-baseline">
+          <div className="mt-6 sm:mt-8">
+            <div className="border-2 border-line bg-white text-ink p-4 sm:p-8 relative shadow-warm-lg">
+              <div className="flex flex-col justify-between border-b border-line pb-4 sm:pb-6 sm:flex-row sm:items-baseline">
                 <div>
                   <div className="flex items-center gap-1.5 mb-1">
                     <span className="h-2 w-2 rounded-full bg-[#1D99DE]" />
@@ -655,11 +683,11 @@ export default function BookingClient({
                       Tiket Masuk Resmi
                     </span>
                   </div>
-                  <h2 className="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+                  <h2 className="font-display text-2xl sm:text-4xl font-bold tracking-tight text-ink break-words">
                     BIOSKOP MINI CIKINI
                   </h2>
                 </div>
-                <span className="mt-2 sm:mt-0 border border-[#1D99DE] bg-[#1D99DE]/10 px-3 py-1 font-mono text-xs font-bold uppercase text-[#1277B0]">
+                <span className="mt-2 sm:mt-0 inline-block border border-[#1D99DE] bg-[#1D99DE]/10 px-3 py-1 font-mono text-xs font-bold uppercase text-[#1277B0]">
                   Lunas / QRIS Terkonfirmasi
                 </span>
               </div>
@@ -670,7 +698,7 @@ export default function BookingClient({
                     <span className="font-mono text-xs text-reel uppercase">
                       Film
                     </span>
-                    <h3 className="font-display text-2xl font-bold text-ink">
+                    <h3 className="font-display text-xl sm:text-2xl font-bold text-ink">
                       {booking.filmTitle || showtime.film.title}
                     </h3>
                   </div>
@@ -735,22 +763,20 @@ export default function BookingClient({
               </div>
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
+            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 border-t border-line pt-6">
               <Link
                 href="/films"
-                className="border border-line bg-white px-4 py-2 text-xs font-mono text-reel hover:border-[#1D99DE] hover:text-[#1D99DE]"
+                className="text-center border border-line bg-white px-4 py-2.5 text-xs font-mono text-reel hover:border-[#1D99DE] hover:text-[#1D99DE]"
               >
                 ← Kembali ke Katalog Film
               </Link>
 
-              <div className="flex items-center gap-3">
-                <Link
-                  href="/dashboard"
-                  className="bg-[#D21871] px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-[#B4115F]"
-                >
-                  Buka Tiket Saya (Dashboard)
-                </Link>
-              </div>
+              <Link
+                href="/dashboard"
+                className="text-center bg-[#D21871] px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-[#B4115F]"
+              >
+                Buka Tiket Saya (Dashboard)
+              </Link>
             </div>
           </div>
         )}
@@ -758,7 +784,7 @@ export default function BookingClient({
 
       {/* Order Sidebar */}
       <div className="lg:col-span-4">
-        <div className="border border-line bg-white p-6 shadow-warm">
+        <div className="border border-line bg-white p-5 sm:p-6 shadow-warm">
           <div className="flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-[#1D99DE]" />
             <span className="font-mono text-xs font-bold uppercase text-reel">

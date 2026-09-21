@@ -140,7 +140,7 @@ export default function PayClient({ initialBooking }: PayClientProps) {
   });
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-12">
+    <div className="mx-auto max-w-4xl px-4 sm:px-6 py-8 sm:py-12">
       {/* Breadcrumb / Back */}
       <div className="mb-6">
         <Link
@@ -160,7 +160,7 @@ export default function PayClient({ initialBooking }: PayClientProps) {
               <span className="font-mono text-xs uppercase text-reel">
                 Kode Pemesanan: {booking.bookingCode}
               </span>
-              <h1 className="mt-1 font-display text-3xl font-bold text-ink">
+              <h1 className="mt-1 font-display text-2xl sm:text-3xl font-bold text-ink">
                 Selesaikan Pembayaran QRIS
               </h1>
             </div>
@@ -168,15 +168,15 @@ export default function PayClient({ initialBooking }: PayClientProps) {
               <span className="block text-[10px] uppercase text-reel">
                 Sisa Waktu Pembayaran
               </span>
-              <span className="inline-block border border-[#F49924]/40 bg-[#F49924]/10 px-3 py-1 text-lg font-bold text-[#A6610A]">
+              <span className="inline-block border border-[#F49924]/40 bg-[#F49924]/10 px-3 py-1 text-base sm:text-lg font-bold text-[#A6610A]">
                 {timeLeft || "15:00"}
               </span>
             </div>
           </div>
 
-          <div className="mt-8 grid grid-cols-1 items-start gap-8 md:grid-cols-12">
+          <div className="mt-6 sm:mt-8 grid grid-cols-1 items-start gap-8 md:grid-cols-12">
             {/* QR Code Presentation */}
-            <div className="flex flex-col items-center border border-line bg-white p-6 shadow-warm-lg md:col-span-6">
+            <div className="flex flex-col items-center border border-line bg-white p-5 sm:p-6 shadow-warm-lg md:col-span-6">
               <div className="w-full border-b border-line pb-3 text-center">
                 <div className="flex items-center justify-center gap-1.5">
                   <span className="h-2 w-2 rounded-full bg-[#1D99DE]" />
@@ -313,14 +313,14 @@ export default function PayClient({ initialBooking }: PayClientProps) {
 
       {/* STATE 2: EXPIRED / FAILED */}
       {isExpired && (
-        <div className="border border-line bg-white p-8 shadow-warm-lg text-center">
+        <div className="border border-line bg-white p-5 sm:p-8 shadow-warm-lg text-center">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-[#D21871]/30 bg-[#D21871]/10 text-2xl text-[#D21871]">
             ✕
           </div>
           <span className="mt-4 inline-block border border-[#D21871]/40 bg-[#D21871]/10 px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider text-[#D21871]">
             Status: Gagal / Kedaluwarsa
           </span>
-          <h2 className="mt-3 font-display text-3xl font-bold text-ink">
+          <h2 className="mt-3 font-display text-2xl sm:text-3xl font-bold text-ink">
             Batas Waktu Pembayaran Telah Habis
           </h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-reel">
@@ -336,16 +336,16 @@ export default function PayClient({ initialBooking }: PayClientProps) {
             <p className="mt-1"><strong>Total:</strong> Rp {booking.totalAmount.toLocaleString("id-ID")}</p>
           </div>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
             <Link
               href={`/films/${booking.filmSlug || booking.filmId}`}
-              className="bg-[#D21871] px-6 py-2.5 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-sm hover:bg-[#B4115F]"
+              className="text-center bg-[#D21871] px-6 py-2.5 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-sm hover:bg-[#B4115F]"
             >
               Pesan Ulang Tiket Ini →
             </Link>
             <Link
               href="/dashboard"
-              className="border border-line bg-white px-6 py-2.5 font-mono text-xs font-semibold text-ink hover:border-ink"
+              className="text-center border border-line bg-white px-6 py-2.5 font-mono text-xs font-semibold text-ink hover:border-ink"
             >
               Kembali ke Dashboard
             </Link>
@@ -356,14 +356,14 @@ export default function PayClient({ initialBooking }: PayClientProps) {
       {/* STATE 3: PAID / SUCCESS */}
       {isPaid && (
         <div className="space-y-6">
-          <div className="border border-line bg-white p-6 shadow-warm text-center">
+          <div className="border border-line bg-white p-5 sm:p-6 shadow-warm text-center">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#1D99DE]/10 text-xl text-[#1D99DE]">
               ✓
             </div>
-            <h2 className="mt-3 font-display text-2xl font-bold text-ink">
+            <h2 className="mt-3 font-display text-xl sm:text-2xl font-bold text-ink">
               Pembayaran Berhasil Dikonfirmasi!
             </h2>
-            <p className="mt-1 text-sm text-reel">
+            <p className="mt-1 text-xs sm:text-sm text-reel">
               Tiket digital Anda telah aktif dan dapat langsung digunakan saat masuk auditorium.
             </p>
             <div className="mt-4">
@@ -377,13 +377,13 @@ export default function PayClient({ initialBooking }: PayClientProps) {
           </div>
 
           {/* Ticket Pass presentation */}
-          <div className="border-2 border-line bg-white p-6 shadow-warm-lg sm:p-8">
-            <div className="flex flex-col justify-between border-b border-line pb-6 sm:flex-row sm:items-baseline">
+          <div className="border-2 border-line bg-white p-4 sm:p-8 shadow-warm-lg">
+            <div className="flex flex-col justify-between border-b border-line pb-4 sm:pb-6 sm:flex-row sm:items-baseline">
               <div>
                 <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1D99DE]">
                   Tiket Masuk Resmi
                 </span>
-                <h3 className="mt-1 font-display text-3xl font-bold text-ink">
+                <h3 className="mt-1 font-display text-2xl sm:text-3xl font-bold text-ink break-words">
                   {booking.filmTitle}
                 </h3>
               </div>

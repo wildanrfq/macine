@@ -8,21 +8,21 @@ export default function AboutPage() {
 
       <main className="flex-1">
         {/* Header with Warm White Base & Cinema Ambient Accents */}
-        <section className="relative overflow-hidden border-b border-line py-16 md:py-24">
+        <section className="relative overflow-hidden border-b border-line py-10 sm:py-16 md:py-24">
           <div className="pointer-events-none absolute -top-20 -left-10 h-80 w-80 rounded-full bg-[#1D99DE]/10 blur-[100px]" />
           <div className="pointer-events-none absolute -bottom-10 right-10 h-80 w-80 rounded-full bg-[#F49924]/12 blur-[100px]" />
 
-          <div className="relative mx-auto max-w-4xl px-6">
+          <div className="relative mx-auto max-w-4xl px-4 sm:px-6">
             <div className="inline-flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-[#D21871]" />
               <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#D21871]">
                 Tentang Kami
               </span>
             </div>
-            <h1 className="mt-2 font-display text-4xl font-bold tracking-tight text-ink sm:text-6xl">
+            <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-ink sm:text-6xl break-words">
               Bioskop Mini Cikini
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink/80">
+            <p className="mt-4 max-w-2xl text-sm sm:text-base leading-relaxed text-ink/80">
               Sebuah ruang pemutaran film alternatif di jantung Jakarta. Kami
               hadir untuk menghidupkan kembali tradisi menonton bersama yang
               intim, menghargai setiap detik karya gambar bergerak.
@@ -31,11 +31,11 @@ export default function AboutPage() {
         </section>
 
         {/* Narrative & Philosophy */}
-        <section className="border-b border-line py-16">
-          <div className="mx-auto max-w-4xl px-6">
-            <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
+        <section className="border-b border-line py-10 sm:py-16">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6">
+            <div className="grid grid-cols-1 gap-8 md:gap-12 md:grid-cols-12">
               <div className="md:col-span-4">
-                <h2 className="font-display text-2xl font-bold text-ink">
+                <h2 className="font-display text-xl sm:text-2xl font-bold text-ink">
                   Bukan Sekadar Layar
                 </h2>
                 <div className="mt-2 flex items-center gap-1.5 font-mono text-xs font-semibold text-[#1277B0]">
@@ -63,11 +63,11 @@ export default function AboutPage() {
         </section>
 
         {/* Technical Specs & Space */}
-        <section className="border-b border-line py-16">
-          <div className="mx-auto max-w-4xl px-6">
-            <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
+        <section className="border-b border-line py-10 sm:py-16">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6">
+            <div className="grid grid-cols-1 gap-8 md:gap-12 md:grid-cols-12">
               <div className="md:col-span-4">
-                <h2 className="font-display text-2xl font-bold text-ink">
+                <h2 className="font-display text-xl sm:text-2xl font-bold text-ink">
                   Spesifikasi Ruang
                 </h2>
                 <div className="mt-2 flex items-center gap-1.5 font-mono text-xs font-semibold text-[#A6610A]">
@@ -75,12 +75,12 @@ export default function AboutPage() {
                   <span>Auditorium Layar Satu</span>
                 </div>
               </div>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:col-span-8">
-                <div className="border border-line bg-white p-6 shadow-warm">
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:col-span-8">
+                <div className="border border-line bg-white p-5 sm:p-6 shadow-warm">
                   <span className="border border-[#F49924]/30 bg-[#F49924]/10 px-2 py-0.5 font-mono text-xs font-semibold text-[#A6610A]">
                     Kapasitas
                   </span>
-                  <h3 className="mt-2.5 font-display text-2xl font-bold text-ink">
+                  <h3 className="mt-2.5 font-display text-xl sm:text-2xl font-bold text-ink">
                     24 Kursi
                   </h3>
                   <p className="mt-2 text-xs text-reel leading-relaxed">
@@ -89,11 +89,11 @@ export default function AboutPage() {
                   </p>
                 </div>
 
-                <div className="border border-line bg-white p-6 shadow-warm">
+                <div className="border border-line bg-white p-5 sm:p-6 shadow-warm">
                   <span className="border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2 py-0.5 font-mono text-xs font-semibold text-[#1277B0]">
                     Proyeksi
                   </span>
-                  <h3 className="mt-2.5 font-display text-2xl font-bold text-ink">
+                  <h3 className="mt-2.5 font-display text-xl sm:text-2xl font-bold text-ink">
                     DCI 4K & 35mm
                   </h3>
                   <p className="mt-2 text-xs text-reel leading-relaxed">
@@ -102,11 +102,11 @@ export default function AboutPage() {
                   </p>
                 </div>
 
-                <div className="border border-line bg-white p-6 shadow-warm">
+                <div className="border border-line bg-white p-5 sm:p-6 shadow-warm">
                   <span className="border border-[#D21871]/30 bg-[#D21871]/10 px-2 py-0.5 font-mono text-xs font-semibold text-[#D21871]">
                     Tata Suara
                   </span>
-                  <h3 className="mt-2.5 font-display text-2xl font-bold text-ink">
+                  <h3 className="mt-2.5 font-display text-xl sm:text-2xl font-bold text-ink">
                     7.1 Surround
                   </h3>
                   <p className="mt-2 text-xs text-reel leading-relaxed">
@@ -115,11 +115,11 @@ export default function AboutPage() {
                   </p>
                 </div>
 
-                <div className="border border-line bg-white p-6 shadow-warm">
+                <div className="border border-line bg-white p-5 sm:p-6 shadow-warm">
                   <span className="border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2 py-0.5 font-mono text-xs font-semibold text-[#1277B0]">
                     Tiket & Akses
                   </span>
-                  <h3 className="mt-2.5 font-display text-2xl font-bold text-ink">
+                  <h3 className="mt-2.5 font-display text-xl sm:text-2xl font-bold text-ink">
                     Digital QR Pass
                   </h3>
                   <p className="mt-2 text-xs text-reel leading-relaxed">
@@ -133,18 +133,18 @@ export default function AboutPage() {
         </section>
 
         {/* House Rules */}
-        <section className="py-16">
-          <div className="mx-auto max-w-4xl px-6">
-            <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
+        <section className="py-10 sm:py-16">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6">
+            <div className="grid grid-cols-1 gap-8 md:gap-12 md:grid-cols-12">
               <div className="md:col-span-4">
-                <h2 className="font-display text-2xl font-bold text-ink">
+                <h2 className="font-display text-xl sm:text-2xl font-bold text-ink">
                   Tata Tertib
                 </h2>
                 <div className="mt-2 flex items-center gap-1.5 font-mono text-xs font-semibold text-reel">
                   <span>Kenyamanan Bersama</span>
                 </div>
               </div>
-              <div className="md:col-span-8 bg-white border border-line p-6 shadow-warm">
+              <div className="md:col-span-8 bg-white border border-line p-5 sm:p-6 shadow-warm">
                 <ol className="space-y-4 text-sm leading-relaxed text-ink/85">
                   <li className="flex gap-4 border-b border-line pb-3">
                     <span className="font-mono font-bold text-[#1D99DE]">01</span>

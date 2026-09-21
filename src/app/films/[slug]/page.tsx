@@ -56,8 +56,8 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
     <div className="flex min-h-screen flex-col bg-paper text-ink">
       <Navbar />
 
-      <main className="flex-1 py-12">
-        <div className="mx-auto max-w-5xl px-6">
+      <main className="flex-1 py-8 sm:py-12">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <Link
             href="/films"
             className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-[#1D99DE] transition-colors hover:text-[#0F6696]"
@@ -65,10 +65,10 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
             ← Kembali ke Daftar Film
           </Link>
 
-          <div className="mt-8 grid grid-cols-1 gap-12 lg:grid-cols-12">
+          <div className="mt-6 sm:mt-8 grid grid-cols-1 gap-8 lg:gap-12 lg:grid-cols-12">
             {/* Poster Column */}
-            <div className="lg:col-span-4">
-              <div className="border border-line bg-white p-2.5 shadow-warm">
+            <div className="lg:col-span-4 flex flex-col items-center lg:items-stretch">
+              <div className="border border-line bg-white p-2.5 shadow-warm w-full max-w-[280px] sm:max-w-sm lg:max-w-none mx-auto lg:mx-0">
                 <div className="aspect-[2/3] w-full overflow-hidden bg-ink">
                   <Image
                     src={film.posterUrl}
@@ -82,7 +82,8 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
                 </div>
               </div>
 
-              <div className="mt-6 border border-line bg-white p-5 shadow-warm">
+              {/* Program Information (Desktop sidebar) */}
+              <div className="hidden lg:block mt-6 border border-line bg-white p-5 shadow-warm">
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-[#D21871]" />
                   <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-reel">
@@ -155,37 +156,37 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
                   </span>
                 </div>
 
-                <h1 className="mt-2 font-display text-4xl font-bold tracking-tight text-ink sm:text-5xl">
+                <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-ink sm:text-5xl break-words">
                   {film.title}
                 </h1>
 
                 {film.originalTitle && (
-                  <p className="mt-1 font-display text-xl italic text-reel">
+                  <p className="mt-1 font-display text-lg sm:text-xl italic text-reel">
                     {film.originalTitle}
                   </p>
                 )}
               </div>
 
-              <div className="mt-8 border-y border-line py-6">
-                <h2 className="font-display text-2xl font-bold text-ink">
+              <div className="mt-6 sm:mt-8 border-y border-line py-5 sm:py-6">
+                <h2 className="font-display text-xl sm:text-2xl font-bold text-ink">
                   Sinopsis
                 </h2>
-                <p className="mt-4 text-base leading-relaxed text-ink/80">
+                <p className="mt-3 sm:mt-4 text-sm sm:text-base leading-relaxed text-ink/80">
                   {film.synopsis}
                 </p>
               </div>
 
               {/* Showtimes & Booking Selector */}
-              <div className="mt-8">
-                <h2 className="font-display text-2xl font-bold text-ink">
+              <div className="mt-6 sm:mt-8">
+                <h2 className="font-display text-xl sm:text-2xl font-bold text-ink">
                   Pilih Jadwal Pemutaran
                 </h2>
-                <p className="mt-1 text-sm text-reel">
+                <p className="mt-1 text-xs sm:text-sm text-reel">
                   Auditorium intim 20–24 kursi. Setiap pemesanan mendapatkan tiket digital resmi dengan QR code.
                 </p>
 
                 {film.showtimes.length > 0 ? (
-                  <div className="mt-6 space-y-4">
+                  <div className="mt-5 sm:mt-6 space-y-4">
                     {film.showtimes.map((st) => {
                       const dateStr = new Date(st.startTime).toLocaleDateString(
                         "id-ID",
@@ -208,11 +209,11 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
                       return (
                         <div
                           key={st.id}
-                          className="flex flex-col justify-between border border-line bg-white p-5 shadow-warm transition-all hover:border-[#1D99DE] sm:flex-row sm:items-center"
+                          className="flex flex-col justify-between border border-line bg-white p-4 sm:p-5 shadow-warm transition-all hover:border-[#1D99DE] sm:flex-row sm:items-center gap-4"
                         >
                           <div>
-                            <div className="flex items-center gap-3">
-                              <span className="font-display text-3xl font-bold text-ink">
+                            <div className="flex items-center gap-2.5 sm:gap-3">
+                              <span className="font-display text-2xl sm:text-3xl font-bold text-ink">
                                 {timeStr}
                               </span>
                               <span className="border border-line bg-[#FAF8F5] px-2 py-0.5 font-mono text-xs text-reel">
@@ -222,7 +223,7 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
                             <p className="mt-1 text-xs text-reel">{dateStr}</p>
                           </div>
 
-                          <div className="mt-4 flex items-center justify-between gap-6 sm:mt-0">
+                          <div className="flex items-center justify-between gap-4 sm:gap-6 border-t border-line/60 pt-3 sm:border-t-0 sm:pt-0">
                             <div className="flex items-center gap-1.5 font-mono text-sm font-bold text-ink">
                               <span className="h-1.5 w-1.5 rounded-full bg-[#F49924]" />
                               <span>Rp {effectivePrice.toLocaleString("id-ID")}</span>
@@ -246,6 +247,67 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
                     </p>
                   </div>
                 )}
+              </div>
+
+              {/* Program Information (Mobile placement after showtimes) */}
+              <div className="block lg:hidden mt-8 border border-line bg-white p-5 shadow-warm">
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-[#D21871]" />
+                  <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-reel">
+                    Informasi Program Film
+                  </h3>
+                </div>
+                <dl className="mt-4 space-y-3 text-sm">
+                  <div className="flex justify-between border-b border-line/50 pb-2">
+                    <dt className="text-xs text-reel">Program Kurasi</dt>
+                    <dd className="font-bold text-ink text-xs sm:text-sm">
+                      {programLabel} Vol. {film.programVol}
+                    </dd>
+                  </div>
+                  <div className="flex justify-between border-b border-line/50 pb-2">
+                    <dt className="text-xs text-reel">Kategori</dt>
+                    <dd className="font-medium text-ink">
+                      <span className="inline-block border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2 py-0.5 font-mono text-xs font-semibold text-[#1277B0]">
+                        {categoryLabel}
+                      </span>
+                    </dd>
+                  </div>
+                  <div className="flex justify-between border-b border-line/50 pb-2">
+                    <dt className="text-xs text-reel">Sutradara</dt>
+                    <dd className="font-medium text-ink text-xs sm:text-sm">{film.director}</dd>
+                  </div>
+                  <div className="flex justify-between border-b border-line/50 pb-2">
+                    <dt className="text-xs text-reel">Durasi</dt>
+                    <dd className="font-medium text-ink text-xs sm:text-sm">
+                      {film.durationMinutes} Menit
+                    </dd>
+                  </div>
+                  <div className="flex justify-between border-b border-line/50 pb-2">
+                    <dt className="text-xs text-reel">Klasifikasi Usia</dt>
+                    <dd className="font-medium text-ink">
+                      <span className="inline-block border border-[#D21871]/30 bg-[#D21871]/10 px-2 py-0.5 font-mono text-xs font-semibold text-[#D21871]">
+                        {film.rating}
+                      </span>
+                    </dd>
+                  </div>
+                  <div className="flex justify-between border-b border-line/50 pb-2">
+                    <dt className="text-xs text-reel">Genre</dt>
+                    <dd className="font-medium text-ink text-xs sm:text-sm">
+                      {film.genre}
+                    </dd>
+                  </div>
+                  <div className="flex justify-between border-b border-line/50 pb-2">
+                    <dt className="text-xs text-reel">Tahun Rilis</dt>
+                    <dd className="font-medium text-ink text-xs sm:text-sm">{film.releaseYear}</dd>
+                  </div>
+                  <div className="flex justify-between pt-1">
+                    <dt className="text-xs text-reel">Harga Tiket</dt>
+                    <dd className="flex items-center gap-1.5 font-mono font-bold text-ink text-xs sm:text-sm">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#F49924]" />
+                      <span>Rp {film.price.toLocaleString("id-ID")}</span>
+                    </dd>
+                  </div>
+                </dl>
               </div>
             </div>
           </div>

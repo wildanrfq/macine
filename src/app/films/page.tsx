@@ -43,8 +43,8 @@ export default async function FilmsPage({ searchParams }: FilmsPageProps) {
     <div className="flex min-h-screen flex-col bg-paper text-ink">
       <Navbar />
 
-      <main className="flex-1 py-12">
-        <div className="mx-auto max-w-6xl px-6">
+      <main className="flex-1 py-8 sm:py-12">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           {/* Header */}
           <div className="border-b border-line pb-6">
             <div className="inline-flex items-center gap-2">
@@ -53,22 +53,22 @@ export default async function FilmsPage({ searchParams }: FilmsPageProps) {
                 Kurasi Sinema
               </span>
             </div>
-            <h1 className="mt-2 font-display text-4xl font-bold tracking-tight text-ink sm:text-5xl">
+            <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-ink sm:text-5xl">
               Katalog Film & Jadwal
             </h1>
-            <p className="mt-2 max-w-2xl text-sm text-reel">
+            <p className="mt-2 max-w-2xl text-xs sm:text-sm text-reel">
               Pilihan sinema independen dari film panjang, film dokumenter bersejarah, hingga film pendek terbaik. Diputar intim di auditorium berkapasitas 20–24 kursi.
             </p>
 
             {/* Category Filter Tabs */}
-            <div className="mt-8 flex flex-wrap gap-2 pt-2">
+            <div className="mt-6 sm:mt-8 flex gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible -mx-4 px-4 sm:mx-0 sm:px-0">
               {categories.map((cat) => {
                 const isActive = selectedCategory === cat.key;
                 return (
                   <Link
                     key={cat.key}
                     href={cat.key === "ALL" ? "/films" : `/films?category=${cat.key}`}
-                    className={`flex items-center gap-2 border px-4 py-2 font-mono text-xs font-semibold transition-all ${
+                    className={`flex flex-shrink-0 items-center gap-1.5 sm:gap-2 border px-3.5 sm:px-4 py-2 font-mono text-xs font-semibold whitespace-nowrap transition-all ${
                       isActive
                         ? "border-[#D21871] bg-[#D21871] text-white shadow-sm"
                         : "border-line bg-white text-ink hover:border-[#1D99DE] hover:text-[#1D99DE]"
@@ -76,7 +76,7 @@ export default async function FilmsPage({ searchParams }: FilmsPageProps) {
                   >
                     <span>{cat.label}</span>
                     <span
-                      className={`text-[10px] ${
+                      className={`text-[10px] hidden sm:inline ${
                         isActive ? "text-white/80" : "text-reel"
                       }`}
                     >
@@ -150,7 +150,7 @@ export default async function FilmsPage({ searchParams }: FilmsPageProps) {
                         </div>
                       </div>
 
-                      <div className="flex flex-1 flex-col justify-between p-6">
+                      <div className="flex flex-1 flex-col justify-between p-4 sm:p-6">
                         <div>
                           <div className="flex items-center justify-between text-xs font-mono">
                             <span className="border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2 py-0.5 font-semibold text-[#1277B0]">

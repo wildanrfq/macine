@@ -54,8 +54,8 @@ export default async function BookingPage({ params }: BookingPageProps) {
         }
       />
 
-      <main className="flex-1 py-10">
-        <div className="mx-auto max-w-6xl px-6">
+      <main className="flex-1 py-6 sm:py-10">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <Link
             href={`/films/${showtime.film.slug || showtime.film.id}`}
             className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-[#1D99DE] hover:text-[#0F6696]"

@@ -96,8 +96,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         }
       />
 
-      <main className="flex-1 py-12">
-        <div className="mx-auto max-w-5xl px-6">
+      <main className="flex-1 py-8 sm:py-12">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
           {/* Header */}
           <div className="border-b border-line pb-6">
             <div className="inline-flex items-center gap-2">
@@ -106,10 +106,10 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                 Area Penonton
               </span>
             </div>
-            <h1 className="mt-2 font-display text-4xl font-bold tracking-tight text-ink sm:text-5xl">
+            <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-ink sm:text-5xl">
               {user ? `Tiket Saya, ${user.name.split(" ")[0]}` : "Tiket & Riwayat Pemesanan"}
             </h1>
-            <p className="mt-2 text-sm text-reel">
+            <p className="mt-2 text-xs sm:text-sm text-reel">
               {user
                 ? "Seluruh tiket aktif dan riwayat pemesanan yang tertaut dengan akun Anda."
                 : "Tunjukkan tiket digital ini kepada petugas di pintu masuk auditorium sebelum film dimulai."}
@@ -118,12 +118,12 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
           {/* Not Logged In Banner & Quick Lookup */}
           {!user && (
-            <div className="mt-8 border border-line bg-white p-6 shadow-warm">
+            <div className="mt-6 sm:mt-8 border border-line bg-white p-5 sm:p-6 shadow-warm">
               <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-[#D21871]" />
-                    <h2 className="font-display text-2xl font-bold text-ink">
+                    <h2 className="font-display text-xl sm:text-2xl font-bold text-ink">
                       Masuk untuk Menyimpan Riwayat Tiket
                     </h2>
                   </div>
@@ -133,7 +133,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                   </p>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
                   <Link
                     href="/login?redirect=/dashboard"
                     className="bg-[#D21871] px-5 py-2 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-[#B4115F]"
@@ -154,7 +154,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                 <span className="font-mono text-xs text-reel block mb-2">
                   Atau cari tiket manual tanpa login (masukkan Kode Booking / Email):
                 </span>
-                <form method="GET" action="/dashboard" className="flex max-w-md gap-2">
+                <form method="GET" action="/dashboard" className="flex flex-col sm:flex-row max-w-md gap-2">
                   <input
                     type="text"
                     name="code"
@@ -164,7 +164,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                   />
                   <button
                     type="submit"
-                    className="border border-ink bg-ink px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white hover:bg-transparent hover:text-ink"
+                    className="border border-ink bg-ink px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white hover:bg-transparent hover:text-ink text-center"
                   >
                     Cari Tiket
                   </button>
@@ -174,9 +174,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
           )}
 
           {/* Active Tickets Section */}
-          <section className="mt-10">
-            <div className="flex items-center justify-between">
-              <h2 className="font-display text-2xl font-bold text-ink">
+          <section className="mt-10 sm:mt-12">
+            <div className="flex items-center justify-between border-b border-line pb-3">
+              <h2 className="font-display text-xl sm:text-2xl font-bold text-ink">
                 Tiket Aktif Siap Pindai
               </h2>
               <span className="font-mono text-xs font-semibold text-[#1277B0]">
@@ -185,7 +185,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             </div>
 
             {activeBookings.length > 0 ? (
-              <div className="mt-6 space-y-8">
+              <div className="mt-6 space-y-6 sm:space-y-8">
                 {activeBookings.map((b) => {
                   const showtimeDate = new Date(b.showtime.startTime);
                   const dateStr = showtimeDate.toLocaleDateString("id-ID", {
@@ -206,31 +206,31 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                     >
                       <div className="grid grid-cols-1 md:grid-cols-12">
                         {/* Main Stub Info */}
-                        <div className="p-8 md:col-span-8">
-                          <div className="flex items-center justify-between">
+                        <div className="p-5 sm:p-8 md:col-span-8">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                             <div className="flex items-center gap-2">
                               <span className="h-2 w-2 rounded-full bg-[#1D99DE]" />
                               <span className="h-2 w-2 rounded-full bg-[#F49924]" />
                               <span className="h-2 w-2 rounded-full bg-[#D21871]" />
-                              <span className="font-display text-xl font-bold tracking-wider ml-1">
+                              <span className="font-display text-lg sm:text-xl font-bold tracking-wider ml-1 break-words">
                                 BIOSKOP MINI CIKINI
                               </span>
                             </div>
-                            <span className="border border-[#1D99DE] bg-[#1D99DE]/10 px-2.5 py-0.5 font-mono text-xs font-bold uppercase text-[#1277B0]">
+                            <span className="self-start sm:self-auto inline-block border border-[#1D99DE] bg-[#1D99DE]/10 px-2.5 py-0.5 font-mono text-xs font-bold uppercase text-[#1277B0]">
                               Lunas / QRIS
                             </span>
                           </div>
 
-                          <div className="mt-6">
+                          <div className="mt-5 sm:mt-6">
                             <span className="font-mono text-xs uppercase tracking-wider text-reel">
                               Judul Film
                             </span>
-                            <h3 className="mt-1 font-display text-3xl font-bold text-ink sm:text-4xl">
+                            <h3 className="mt-1 font-display text-2xl sm:text-4xl font-bold text-ink break-words">
                               {b.showtime.film.title}
                             </h3>
                           </div>
 
-                          <div className="mt-6 grid grid-cols-2 gap-4 border-t border-line pt-4 sm:grid-cols-4">
+                          <div className="mt-5 sm:mt-6 grid grid-cols-2 gap-4 border-t border-line pt-4 sm:grid-cols-4">
                             <div>
                               <span className="block font-mono text-xs text-reel">
                                 Tanggal
@@ -265,7 +265,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                             </div>
                           </div>
 
-                          <div className="mt-6 border-t border-line pt-4 flex flex-wrap justify-between text-xs text-reel">
+                          <div className="mt-5 sm:mt-6 border-t border-line pt-4 flex flex-col sm:flex-row justify-between gap-1 sm:gap-2 text-xs text-reel">
                             <span>Pemesan: <strong className="text-ink">{b.customerName}</strong></span>
                             <span className="font-mono">
                               Kode Booking: <strong className="text-ink">{b.bookingCode}</strong>
@@ -274,7 +274,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                         </div>
 
                         {/* Perforated Divider & QR Code Column */}
-                        <div className="flex flex-col items-center justify-center border-t border-dashed border-line bg-[#FAF8F5] p-8 md:border-t-0 md:border-l md:col-span-4">
+                        <div className="flex flex-col items-center justify-center border-t border-dashed border-line bg-[#FAF8F5] p-6 sm:p-8 md:border-t-0 md:border-l md:col-span-4">
                           <div className="border border-line p-2 bg-white shadow-sm">
                             <QrCodeVisual
                               value={`PASS-${b.bookingCode}`}
