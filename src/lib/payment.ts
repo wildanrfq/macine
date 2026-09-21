@@ -166,3 +166,41 @@ export async function processPaymentWebhook(orderId: string, transactionStatus: 
     return { booking, status: booking.paymentStatus };
   });
 }
+
+export async function expireOverdueBookings(): Promise<number> {
+  const now = new Date();
+  const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
+
+  try {
+    return await prisma.$transaction(async (tx) => {
+      const overdueBookings = await tx.booking.findMany({
+        where: {
+          paymentStatus: "PENDING",
+          OR: [
+            { expiresAt: { lt: now } },
+            { expiresAt: null, createdAt: { lt: fifteenMinutesAgo } },
+          ],
+        },
+        select: { id: true },
+      });
+
+      if (overdueBookings.length === 0) return 0;
+
+      const overdueIds = overdueBookings.map((b) => b.id);
+
+      await tx.ticket.deleteMany({
+        where: { bookingId: { in: overdueIds } },
+      });
+
+      await tx.booking.updateMany({
+        where: { id: { in: overdueIds } },
+        data: { paymentStatus: "EXPIRED" },
+      });
+
+      return overdueBookings.length;
+    });
+  } catch (error) {
+    console.error("Gagal mengupdate status transaksi kedaluwarsa:", error);
+    return 0;
+  }
+}

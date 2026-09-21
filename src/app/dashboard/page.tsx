@@ -4,6 +4,7 @@ import Footer from "@/components/public/Footer";
 import prisma from "@/lib/prisma";
 import QrCodeVisual from "@/components/ui/QrCodeVisual";
 import { getCurrentUser } from "@/lib/auth";
+import { expireOverdueBookings } from "@/lib/payment";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +13,8 @@ interface DashboardPageProps {
 }
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
+  await expireOverdueBookings();
+
   const user = await getCurrentUser();
   const sp = searchParams ? await searchParams : {};
   const queryCode = sp.code?.trim() || sp.search?.trim();
@@ -25,10 +28,13 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     totalAmount: number;
     paymentStatus: string;
     createdAt: Date;
+    expiresAt?: Date | null;
+    qrisString?: string | null;
     showtime: {
       startTime: Date;
       auditorium: string;
       film: {
+        id: string;
         title: string;
         posterUrl: string;
       };
@@ -325,41 +331,84 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                       <th className="px-4 py-3">Jumlah</th>
                       <th className="px-4 py-3">Total</th>
                       <th className="px-4 py-3">Status</th>
+                      <th className="px-4 py-3 text-right">Aksi</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-line">
-                    {otherBookings.map((b) => (
-                      <tr key={b.id} className="hover:bg-[#FAF8F5]/50">
-                        <td className="px-4 py-3 font-mono text-xs">
-                          {b.bookingCode}
-                        </td>
-                        <td className="px-4 py-3 font-medium text-ink">
-                          {b.showtime.film.title}
-                        </td>
-                        <td className="px-4 py-3 text-xs text-reel">
-                          {new Date(b.showtime.startTime).toLocaleString(
-                            "id-ID"
-                          )}
-                        </td>
-                        <td className="px-4 py-3 font-mono text-xs">
-                          {b.ticketCount} Tiket
-                        </td>
-                        <td className="px-4 py-3 font-mono text-xs font-bold text-ink">
-                          Rp {b.totalAmount.toLocaleString("id-ID")}
-                        </td>
-                        <td className="px-4 py-3">
-                          <span
-                            className={`border px-2 py-0.5 font-mono text-xs font-semibold ${
-                              b.paymentStatus === "PENDING"
-                                ? "border-[#F49924]/40 bg-[#F49924]/10 text-[#A6610A]"
-                                : "border-line text-reel"
-                            }`}
-                          >
-                            {b.paymentStatus}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
+                    {otherBookings.map((b) => {
+                      const isPending = b.paymentStatus === "PENDING";
+                      const isExpired =
+                        b.paymentStatus === "EXPIRED" ||
+                        b.paymentStatus === "FAILED" ||
+                        b.paymentStatus === "GAGAL";
+
+                      return (
+                        <tr key={b.id} className="hover:bg-[#FAF8F5]/50">
+                          <td className="px-4 py-3 font-mono text-xs">
+                            {isPending ? (
+                              <Link
+                                href={`/pay/${b.bookingCode}`}
+                                className="font-bold text-[#1D99DE] hover:underline"
+                                title="Lanjutkan pembayaran QRIS"
+                              >
+                                {b.bookingCode}
+                              </Link>
+                            ) : (
+                              b.bookingCode
+                            )}
+                          </td>
+                          <td className="px-4 py-3 font-medium text-ink">
+                            {b.showtime.film.title}
+                          </td>
+                          <td className="px-4 py-3 text-xs text-reel">
+                            {new Date(b.showtime.startTime).toLocaleString(
+                              "id-ID"
+                            )}
+                          </td>
+                          <td className="px-4 py-3 font-mono text-xs">
+                            {b.ticketCount} Tiket
+                          </td>
+                          <td className="px-4 py-3 font-mono text-xs font-bold text-ink">
+                            Rp {b.totalAmount.toLocaleString("id-ID")}
+                          </td>
+                          <td className="px-4 py-3">
+                            {isPending ? (
+                              <span className="inline-flex items-center gap-1.5 border border-[#F49924]/40 bg-[#F49924]/10 px-2 py-0.5 font-mono text-xs font-semibold text-[#A6610A]">
+                                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#F49924]" />
+                                PENDING
+                              </span>
+                            ) : isExpired ? (
+                              <span className="inline-flex items-center gap-1 border border-[#D21871]/40 bg-[#D21871]/10 px-2 py-0.5 font-mono text-xs font-bold text-[#D21871]">
+                                GAGAL
+                              </span>
+                            ) : (
+                              <span className="border border-line px-2 py-0.5 font-mono text-xs text-reel">
+                                {b.paymentStatus}
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-4 py-3 text-right font-mono text-xs">
+                            {isPending ? (
+                              <Link
+                                href={`/pay/${b.bookingCode}`}
+                                className="inline-block bg-[#D21871] px-3 py-1 font-semibold uppercase tracking-wider text-white shadow-sm transition-all hover:bg-[#B4115F]"
+                              >
+                                Bayar Sekarang →
+                              </Link>
+                            ) : isExpired ? (
+                              <Link
+                                href={`/films/${b.showtime.film.id}`}
+                                className="font-semibold text-[#1D99DE] hover:underline"
+                              >
+                                Pesan Ulang
+                              </Link>
+                            ) : (
+                              <span className="text-reel">-</span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

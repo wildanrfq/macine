@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { createQrisCharge } from "@/lib/payment";
+import { createQrisCharge, expireOverdueBookings } from "@/lib/payment";
 import { getCurrentUser } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
+    await expireOverdueBookings();
+
     const body = await request.json();
     const {
       showtimeId,

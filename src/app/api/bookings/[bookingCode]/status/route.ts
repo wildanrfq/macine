@@ -26,6 +26,26 @@ export async function GET(request: Request, { params }: StatusRouteProps) {
       );
     }
 
+    if (booking.paymentStatus === "PENDING") {
+      const now = new Date();
+      const isExpired = booking.expiresAt
+        ? new Date(booking.expiresAt) < now
+        : Date.now() - new Date(booking.createdAt).getTime() > 15 * 60 * 1000;
+
+      if (isExpired) {
+        await prisma.$transaction(async (tx) => {
+          await tx.ticket.deleteMany({
+            where: { bookingId: booking.id },
+          });
+          await tx.booking.update({
+            where: { id: booking.id },
+            data: { paymentStatus: "EXPIRED" },
+          });
+        });
+        booking.paymentStatus = "EXPIRED";
+      }
+    }
+
     return NextResponse.json({
       bookingCode: booking.bookingCode,
       ticketCount: booking.ticketCount,
