@@ -71,3 +71,10 @@ ehthumbs.db
 tmp/
 temp/
 scratch/
+
+# AI Agent & Assistant Files
+.agents/
+AGENTS.md
+CLAUDE.md
+.claude/
+.gemini/
