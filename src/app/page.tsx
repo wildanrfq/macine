@@ -2,19 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
-import prisma from "@/lib/prisma";
+import { getCachedFilms } from "@/lib/films";
 
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const films = await prisma.film.findMany({
-    include: {
-      showtimes: {
-        orderBy: { startTime: "asc" },
-      },
-    },
-    orderBy: { createdAt: "asc" },
-  });
+  const films = await getCachedFilms();
 
   const featuredFilm = films.find((f) => f.isNowShowing) || films[0];
   const otherFilms = films.filter((f) => f.id !== featuredFilm?.id);
