@@ -13,6 +13,13 @@
   --brand-blue: #1D99DE;
   --brand-orange: #F49924;
   --brand-magenta: #D21871;
+
+  /* Ambient cinematic gradient for daytime (Warm Paper + Soft Cinema Glow) */
+  --ambient-bg:
+    radial-gradient(ellipse 90% 55% at 10% -5%, rgba(29, 153, 222, 0.055) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 90% 15%, rgba(244, 153, 36, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 75% 55% at 50% 90%, rgba(210, 24, 113, 0.035) 0%, transparent 65%),
+    linear-gradient(180deg, #FAF8F5 0%, #F5F1EA 50%, #FAF8F5 100%);
 }
 
 .dark {
@@ -24,6 +31,13 @@
   --reel-grey: #A6A097;
   --line: #2E2B28;
   --spotlight: #242220;
+
+  /* Ambient cinematic gradient for night (Velvet Ink Auditorium + Projector Glow) */
+  --ambient-bg:
+    radial-gradient(ellipse 90% 55% at 15% -5%, rgba(29, 153, 222, 0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 85% 20%, rgba(244, 153, 36, 0.075) 0%, transparent 60%),
+    radial-gradient(ellipse 75% 60% at 50% 85%, rgba(210, 24, 113, 0.07) 0%, transparent 65%),
+    linear-gradient(180deg, #121110 0%, #161514 50%, #0E0D0C 100%);
 }
 
 @theme {
@@ -45,12 +59,27 @@
 }
 
 body {
-  background-color: var(--paper);
+  background: var(--ambient-bg);
+  background-attachment: fixed;
+  background-size: 100% 100%;
   color: var(--ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  min-height: 100vh;
+  transition: color 0.25s ease;
+}
+
+/* Allow the ambient body gradient to show through full-height page wrappers */
+div.bg-paper {
+  background-color: transparent !important;
+}
+
+/* Translucent frosted glass effect for Navbar */
+header[class*="bg-paper"] {
+  background-color: color-mix(in srgb, var(--paper) 88%, transparent) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 /* Dark mode overrides for explicit background utilities */
@@ -83,16 +112,16 @@ body {
 }
 
 .dark .ambient-cinema-glow {
-  opacity: 0.35;
+  opacity: 0.25;
 }
 
 @keyframes ambientGlow {
   0%, 100% {
-    opacity: 0.6;
+    opacity: 0.5;
     transform: scale(1);
   }
   50% {
-    opacity: 0.85;
+    opacity: 0.75;
     transform: scale(1.05);
   }
 }
