@@ -143,48 +143,45 @@ export default function Navbar({ initialUser }: NavbarProps) {
             <Link
               href="/films"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between border-b border-line/60 pb-2.5 text-sm text-ink hover:text-[#1D99DE]"
+              className="flex items-center justify-end border-b border-line/60 pb-2.5 text-right text-sm text-ink hover:text-[#1D99DE]"
             >
               <span>Program Film & Jadwal</span>
-              <span className="font-mono text-xs text-reel">Kurasi Sinema</span>
             </Link>
 
             <Link
               href="/about"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between border-b border-line/60 pb-2.5 text-sm text-ink hover:text-[#1D99DE]"
+              className="flex items-center justify-end border-b border-line/60 pb-2.5 text-right text-sm text-ink hover:text-[#1D99DE]"
             >
               <span>Tentang Bioskop</span>
-              <span className="font-mono text-xs text-reel">Cikini 42</span>
             </Link>
 
             <Link
               href="/dashboard"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between border-b border-line/60 pb-2.5 text-sm text-ink hover:text-[#D21871]"
+              className="flex items-center justify-end border-b border-line/60 pb-2.5 text-right text-sm text-ink hover:text-[#D21871]"
             >
               <span>Tiket Saya</span>
-              <span className="font-mono text-xs text-[#D21871]">Lihat Tiket</span>
             </Link>
 
             {user ? (
               <div className="pt-2">
                 <div className="rounded border border-line bg-white p-3 shadow-sm">
-                  <div className="flex items-center gap-2.5">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1D99DE] font-mono text-xs font-bold text-white">
-                      {user.name.charAt(0).toUpperCase()}
-                    </span>
-                    <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-end gap-2.5">
+                    <div className="min-w-0 text-right">
                       <p className="truncate text-xs font-bold text-ink">{user.name}</p>
                       <p className="truncate font-mono text-[10px] text-reel">{user.email}</p>
                     </div>
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1D99DE] font-mono text-xs font-bold text-white">
+                      {user.name.charAt(0).toUpperCase()}
+                    </span>
                   </div>
                   <button
                     type="button"
                     onClick={handleMobileLogout}
-                    className="mt-3 w-full border-t border-line pt-2 text-left font-mono text-xs text-reel hover:text-[#D21871]"
+                    className="mt-3 w-full border-t border-line pt-2 text-right font-mono text-xs text-reel hover:text-[#D21871]"
                   >
-                    Keluar Sesi (Logout)
+                    Keluar
                   </button>
                 </div>
               </div>
