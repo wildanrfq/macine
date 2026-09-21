@@ -18,6 +18,13 @@ const bodyFont = DM_Sans({
 export const metadata: Metadata = {
   title: "Bioskop Mini | Sinema Independen",
   description: "Ruang putar film alternatif, kurasi sinema terpilih, dan pemesanan tiket.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/apple-icon.png",
+  },
 };
 
 const themeInitScript = `
