@@ -1,0 +1,273 @@
+import Link from "next/link";
+import Navbar from "@/components/public/Navbar";
+import Footer from "@/components/public/Footer";
+import prisma from "@/lib/prisma";
+
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const films = await prisma.film.findMany({
+    include: {
+      showtimes: {
+        orderBy: { startTime: "asc" },
+      },
+    },
+    orderBy: { createdAt: "asc" },
+  });
+
+  const featuredFilm = films.find((f) => f.isNowShowing) || films[0];
+  const otherFilms = films.filter((f) => f.id !== featuredFilm?.id);
+  const nowShowing = otherFilms.filter((f) => f.isNowShowing);
+  const comingSoon = films.filter((f) => f.isComingSoon);
+
+  return (
+    <div className="flex min-h-screen flex-col bg-paper text-ink">
+      <Navbar />
+
+      <main className="flex-1">
+        {/* Asymmetric Poster-forward Marquee Hero with Warm White Base & Color Accents */}
+        {featuredFilm && (
+          <section className="relative overflow-hidden border-b border-line bg-gradient-to-b from-[#FAF8F5] via-[#FDFBF7] to-[#FAF8F5] py-16 md:py-24">
+            {/* Ambient cinema glows in brand colors */}
+            <div className="pointer-events-none absolute -top-24 -left-20 h-96 w-96 rounded-full bg-[#1D99DE]/10 blur-[110px] ambient-cinema-glow" />
+            <div className="pointer-events-none absolute top-1/3 -right-20 h-96 w-96 rounded-full bg-[#F49924]/12 blur-[120px] ambient-cinema-glow" />
+            <div className="pointer-events-none absolute -bottom-20 left-1/3 h-80 w-80 rounded-full bg-[#D21871]/10 blur-[100px] ambient-cinema-glow" />
+
+            <div className="relative mx-auto max-w-6xl px-6">
+              <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
+                {/* Poster column */}
+                <div className="lg:col-span-5">
+                  <div className="relative aspect-[2/3] w-full max-w-sm overflow-hidden border border-line bg-white p-2.5 shadow-warm-lg">
+                    <div className="relative h-full w-full overflow-hidden bg-[#121110]">
+                      <img
+                        src={featuredFilm.posterUrl}
+                        alt={featuredFilm.title}
+                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                      />
+                      <div className="absolute top-3 left-3 bg-[#F49924] px-3 py-1 font-mono text-xs font-bold tracking-wider text-white shadow-sm">
+                        SEDANG TAYANG
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Details column */}
+                <div className="lg:col-span-7">
+                  <div className="inline-flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#D21871]" />
+                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#D21871]">
+                      Pilihan Kurator Pekan Ini
+                    </span>
+                  </div>
+
+                  <h1 className="mt-2 font-display text-5xl font-bold tracking-tight text-ink sm:text-6xl md:text-7xl">
+                    {featuredFilm.title}
+                  </h1>
+
+                  {featuredFilm.originalTitle && (
+                    <p className="mt-1 text-lg italic text-reel">
+                      {featuredFilm.originalTitle} ({featuredFilm.releaseYear})
+                    </p>
+                  )}
+
+                  <div className="mt-6 flex flex-wrap items-center gap-2.5 text-xs font-mono">
+                    <span className="border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2.5 py-1 font-semibold text-[#1277B0]">
+                      {featuredFilm.genre}
+                    </span>
+                    <span className="border border-[#F49924]/30 bg-[#F49924]/10 px-2.5 py-1 font-semibold text-[#A6610A]">
+                      {featuredFilm.durationMinutes} Menit
+                    </span>
+                    <span className="border border-[#D21871]/30 bg-[#D21871]/10 px-2.5 py-1 font-semibold text-[#D21871]">
+                      Klasifikasi {featuredFilm.rating}
+                    </span>
+                    <span className="border border-line bg-white px-2.5 py-1 text-reel">
+                      Sutradara: {featuredFilm.director}
+                    </span>
+                  </div>
+
+                  <p className="mt-6 max-w-xl text-base leading-relaxed text-ink/80">
+                    {featuredFilm.synopsis}
+                  </p>
+
+                  <div className="mt-8 border-t border-line/60 pt-6">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-mono uppercase tracking-wider text-reel">
+                        Jadwal Pemutaran Hari Ini
+                      </span>
+                      <span className="text-xs font-mono font-medium text-[#1D99DE]">
+                        Pilih jam untuk pesan
+                      </span>
+                    </div>
+
+                    <div className="mt-3 flex flex-wrap gap-3">
+                      {featuredFilm.showtimes.length > 0 ? (
+                        featuredFilm.showtimes.map((st) => {
+                          const timeStr = new Date(st.startTime).toLocaleTimeString(
+                            "id-ID",
+                            { hour: "2-digit", minute: "2-digit" }
+                          );
+                          return (
+                            <Link
+                              key={st.id}
+                              href={`/book/${st.id}`}
+                              className="group flex items-center gap-3 border border-line bg-white px-4 py-2.5 text-sm text-ink shadow-sm transition-all hover:border-[#1D99DE] hover:bg-[#1D99DE] hover:text-white"
+                            >
+                              <span className="font-mono font-bold">{timeStr}</span>
+                              <span className="text-xs text-reel group-hover:text-white/90">
+                                {st.auditorium}
+                              </span>
+                            </Link>
+                          );
+                        })
+                      ) : (
+                        <p className="text-sm text-reel">
+                          Belum ada jadwal tayang hari ini.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-8 flex items-center gap-5">
+                    <Link
+                      href={`/films/${featuredFilm.id}`}
+                      className="bg-[#D21871] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#B4115F] hover:shadow-lg"
+                    >
+                      Detail Film & Sinopsis
+                    </Link>
+                    <div className="flex items-center gap-2 font-mono text-sm font-bold text-ink">
+                      <span className="h-2 w-2 rounded-full bg-[#F49924]" />
+                      <span>Rp {featuredFilm.price.toLocaleString("id-ID")}</span>
+                      <span className="text-xs font-normal text-reel">/ tiket</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Other Now Showing Catalog */}
+        <section className="border-b border-line py-16">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="flex items-baseline justify-between border-b border-line pb-4">
+              <div>
+                <h2 className="font-display text-3xl font-bold tracking-tight text-ink md:text-4xl">
+                  Tayang Pekan Ini
+                </h2>
+                <p className="mt-1 text-sm text-reel">
+                  Program tayang reguler di Layar Utama dan Layar Studio
+                </p>
+              </div>
+
+              <Link
+                href="/films"
+                className="text-sm font-semibold text-[#1D99DE] transition-colors hover:text-[#0F6696] hover:underline"
+              >
+                Lihat Semua Film &rarr;
+              </Link>
+            </div>
+
+            <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {nowShowing.map((film) => (
+                <article
+                  key={film.id}
+                  className="flex flex-col border border-line bg-white p-4 shadow-warm transition-shadow hover:shadow-warm-lg"
+                >
+                  <div className="aspect-[3/4] w-full overflow-hidden bg-ink">
+                    <img
+                      src={film.posterUrl}
+                      alt={film.title}
+                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                    />
+                  </div>
+
+                  <div className="mt-4 flex flex-1 flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between text-xs font-mono">
+                        <span className="border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2 py-0.5 font-semibold text-[#1277B0]">
+                          {film.genre}
+                        </span>
+                        <span className="text-reel">{film.durationMinutes} Min</span>
+                      </div>
+
+                      <h3 className="mt-2.5 font-display text-2xl font-bold text-ink">
+                        {film.title}
+                      </h3>
+
+                      <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-reel">
+                        {film.synopsis}
+                      </p>
+                    </div>
+
+                    <div className="mt-6 flex items-center justify-between border-t border-line pt-4">
+                      <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-ink">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#F49924]" />
+                        <span>Rp {film.price.toLocaleString("id-ID")}</span>
+                      </div>
+
+                      <Link
+                        href={`/films/${film.id}`}
+                        className="border border-[#1D99DE] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#1D99DE] shadow-sm transition-all hover:bg-[#1D99DE] hover:text-white"
+                      >
+                        Jadwal & Tiket
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Coming Soon Section */}
+        {comingSoon.length > 0 && (
+          <section className="py-16">
+            <div className="mx-auto max-w-6xl px-6">
+              <div className="border-b border-line pb-4">
+                <h2 className="font-display text-3xl font-bold tracking-tight text-ink md:text-4xl">
+                  Segera Hadir
+                </h2>
+                <p className="mt-1 text-sm text-reel">
+                  Program khusus dan rilisan terbatas bulan depan
+                </p>
+              </div>
+
+              <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2">
+                {comingSoon.map((film) => (
+                  <div
+                    key={film.id}
+                    className="flex flex-col gap-6 border border-line bg-white p-6 shadow-warm sm:flex-row"
+                  >
+                    <div className="aspect-[2/3] w-full max-w-[160px] flex-shrink-0 overflow-hidden bg-ink">
+                      <img
+                        src={film.posterUrl}
+                        alt={film.title}
+                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                      />
+                    </div>
+                    <div>
+                      <span className="border border-[#F49924]/30 bg-[#F49924]/10 px-2 py-0.5 text-xs font-mono font-semibold text-[#A6610A]">
+                        Rilisan Mendatang
+                      </span>
+                      <h3 className="mt-2.5 font-display text-2xl font-bold text-ink">
+                        {film.title}
+                      </h3>
+                      <p className="mt-1 font-mono text-xs text-reel">
+                        Sutradara: {film.director}
+                      </p>
+                      <p className="mt-3 text-sm leading-relaxed text-reel">
+                        {film.synopsis}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+      </main>
+
+      <Footer />
+    </div>
+  );
+}

@@ -1,0 +1,104 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  phone        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  bookings     Booking[]
+}
+
+model Film {
+  id              String     @id @default(cuid())
+  title           String
+  originalTitle   String?
+  synopsis        String
+  director        String
+  durationMinutes Int
+  rating          String     @default("13+")
+  genre           String
+  posterUrl       String
+  backdropUrl     String?
+  price           Int        @default(45000)
+  isNowShowing    Boolean    @default(true)
+  isComingSoon    Boolean    @default(false)
+  releaseYear     Int        @default(2026)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  showtimes       Showtime[]
+}
+
+model Showtime {
+  id            String    @id @default(cuid())
+  filmId        String
+  film          Film      @relation(fields: [filmId], references: [id], onDelete: Cascade)
+  startTime     DateTime
+  auditorium    String    @default("Layar Satu")
+  capacity      Int       @default(24)
+  priceOverride Int?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  bookings      Booking[]
+  tickets       Ticket[]
+}
+
+model Booking {
+  id                String    @id @default(cuid())
+  bookingCode       String    @unique
+  customerName      String
+  customerEmail     String
+  customerPhone     String
+  userId            String?
+  user              User?     @relation(fields: [userId], references: [id])
+  showtimeId        String
+  showtime          Showtime  @relation(fields: [showtimeId], references: [id])
+  ticketCount       Int       @default(1)
+  totalAmount       Int
+  paymentStatus     String    @default("PENDING")
+  paymentMethod     String?   @default("QRIS")
+  paymentGatewayRef String?
+  qrisString        String?
+  paidAt            DateTime?
+  expiresAt         DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  tickets           Ticket[]
+}
+
+model Ticket {
+  id         String    @id @default(cuid())
+  ticketCode String    @unique
+  bookingId  String
+  booking    Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  showtimeId String
+  showtime   Showtime  @relation(fields: [showtimeId], references: [id])
+  price      Int
+  isScanned  Boolean   @default(false)
+  scannedAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

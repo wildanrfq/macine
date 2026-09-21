@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #121110;
+  --color-paper: #FAF8F5;
+  --color-paper-card: #FFFFFF;
+  --color-paper-warm: #F3EFEA;
+  --color-reel: #767069;
+  --color-reel-grey: #767069;
+  --color-line: #E7E2D8;
+  --color-spotlight: #FFFFFF;
+
+  --color-brand-blue: #1D99DE;
+  --color-brand-orange: #F49924;
+  --color-brand-magenta: #D21871;
+
+  --font-display: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  --font-body: var(--font-body), "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+:root {
+  --color-ink: #121110;
+  --color-paper: #FAF8F5;
+  --color-paper-card: #FFFFFF;
+  --color-paper-warm: #F3EFEA;
+  --color-reel: #767069;
+  --color-line: #E7E2D8;
+  --color-spotlight: #FFFFFF;
+
+  --color-brand-blue: #1D99DE;
+  --color-brand-orange: #F49924;
+  --color-brand-magenta: #D21871;
+}
+
+body {
+  background-color: #FAF8F5;
+  color: #121110;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes ambientGlow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
+}
+
+.ambient-cinema-glow {
+  animation: ambientGlow 8s ease-in-out infinite;
+}
