@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import QrCodeVisual from "@/components/ui/QrCodeVisual";
 
 interface BookingClientProps {
@@ -767,9 +768,12 @@ export default function BookingClient({
 
           <div className="mt-4 flex gap-4">
             <div className="aspect-[2/3] w-20 flex-shrink-0 overflow-hidden bg-ink">
-              <img
+              <Image
                 src={showtime.film.posterUrl}
                 alt={showtime.film.title}
+                width={80}
+                height={120}
+                unoptimized
                 className="h-full w-full object-cover"
               />
             </div>

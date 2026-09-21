@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import prisma from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -13,35 +14,34 @@ export default async function AdminFilmsPage() {
 
   return (
     <div className="max-w-6xl">
-      <div className="flex items-center justify-between border-b border-line pb-4">
+      <div className="flex items-center justify-between">
         <div>
-          <span className="font-mono text-xs uppercase text-reel">
-            Manajemen Konten
-          </span>
-          <h1 className="font-display text-3xl font-bold text-ink">
-            Katalog & Kurasi Film
+          <h1 className="font-display text-2xl font-bold text-ink">
+            Daftar Film
           </h1>
+          <p className="mt-1 text-sm text-reel">
+            Kelola film yang tayang dan akan datang di Bioskop Mini.
+          </p>
         </div>
-
         <Link
           href="/admin/films/new"
-          className="border border-ink bg-ink px-4 py-2 text-xs font-semibold text-paper hover:bg-transparent hover:text-ink"
+          className="bg-ink px-4 py-2 font-mono text-xs uppercase tracking-wider text-paper hover:bg-lead"
         >
-          + Tambah Judul Baru
+          + Tambah Film
         </Link>
       </div>
 
-      <div className="mt-8 overflow-x-auto border border-line">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-line bg-line/20 font-mono text-xs uppercase text-reel">
+      <div className="mt-8 border border-line bg-paper">
+        <table className="w-full text-left font-mono text-xs">
+          <thead className="border-b border-line bg-line/30 text-reel">
             <tr>
               <th className="px-4 py-3">Poster</th>
-              <th className="px-4 py-3">Judul Film</th>
-              <th className="px-4 py-3">Sutradara</th>
+              <th className="px-4 py-3">Judul</th>
+              <th className="px-4 py-3">Genre</th>
               <th className="px-4 py-3">Durasi</th>
-              <th className="px-4 py-3">Harga Tiket</th>
+              <th className="px-4 py-3">Harga</th>
               <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Sesi Tayang</th>
+              <th className="px-4 py-3">Jadwal</th>
               <th className="px-4 py-3">Aksi</th>
             </tr>
           </thead>
@@ -50,9 +50,12 @@ export default async function AdminFilmsPage() {
               <tr key={film.id}>
                 <td className="px-4 py-3">
                   <div className="aspect-[2/3] w-12 bg-ink">
-                    <img
+                    <Image
                       src={film.posterUrl}
                       alt={film.title}
+                      width={48}
+                      height={72}
+                      unoptimized
                       className="h-full w-full object-cover grayscale"
                     />
                   </div>

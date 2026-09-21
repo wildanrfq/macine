@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import Link from "next/link";
 import UserNavMenu from "./UserNavMenu";
 import ThemeToggle from "./ThemeToggle";
@@ -17,34 +17,24 @@ interface NavbarProps {
 }
 
 export default function Navbar({ initialUser }: NavbarProps) {
-  const [user, setUser] = useState<AuthUser>(() => {
-    if (initialUser !== undefined) {
-      setCachedUser(initialUser);
-      return initialUser;
-    }
-    return getCachedUser() ?? null;
-  });
+  const user = useSyncExternalStore(
+    subscribeAuth,
+    () => {
+      const cached = getCachedUser();
+      if (cached !== undefined) return cached;
+      return initialUser ?? null;
+    },
+    () => initialUser ?? null
+  );
 
   useEffect(() => {
     if (initialUser !== undefined) {
-      setUser(initialUser);
-      setCachedUser(initialUser);
-      return;
-    }
-
-    const unsubscribe = subscribeAuth((updatedUser) => {
-      setUser(updatedUser);
-    });
-
-    if (getCachedUser() === undefined) {
+      if (getCachedUser() !== initialUser) {
+        setCachedUser(initialUser);
+      }
+    } else if (getCachedUser() === undefined) {
       fetchCurrentUser();
-    } else {
-      setUser(getCachedUser() ?? null);
     }
-
-    return () => {
-      unsubscribe();
-    };
   }, [initialUser]);
 
   return (

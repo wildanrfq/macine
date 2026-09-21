@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
 import prisma from "@/lib/prisma";
@@ -39,9 +40,13 @@ export default async function HomePage() {
                 <div className="lg:col-span-5">
                   <div className="relative aspect-[2/3] w-full max-w-sm overflow-hidden border border-line bg-white p-2.5 shadow-warm-lg">
                     <div className="relative h-full w-full overflow-hidden bg-[#121110]">
-                      <img
+                      <Image
                         src={featuredFilm.posterUrl}
                         alt={featuredFilm.title}
+                        width={400}
+                        height={600}
+                        priority
+                        unoptimized
                         className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                       />
                       <div className="absolute top-3 left-3 bg-[#F49924] px-3 py-1 font-mono text-xs font-bold tracking-wider text-white shadow-sm">
@@ -174,9 +179,12 @@ export default async function HomePage() {
                   className="flex flex-col border border-line bg-white p-4 shadow-warm transition-shadow hover:shadow-warm-lg"
                 >
                   <div className="aspect-[3/4] w-full overflow-hidden bg-ink">
-                    <img
+                    <Image
                       src={film.posterUrl}
                       alt={film.title}
+                      width={360}
+                      height={480}
+                      unoptimized
                       className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                     />
                   </div>
@@ -245,9 +253,12 @@ export default async function HomePage() {
                     className="flex flex-col gap-6 border border-line bg-white p-6 shadow-warm sm:flex-row"
                   >
                     <div className="aspect-[2/3] w-full max-w-[160px] flex-shrink-0 overflow-hidden bg-ink">
-                      <img
+                      <Image
                         src={film.posterUrl}
                         alt={film.title}
+                        width={160}
+                        height={240}
+                        unoptimized
                         className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                       />
                     </div>

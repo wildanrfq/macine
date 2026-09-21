@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import QRCode from "qrcode";
 
 interface QrCodeVisualProps {
@@ -18,10 +19,16 @@ export default function QrCodeVisual({
   darkColor = "#121110",
   lightColor = "#FFFFFF",
 }: QrCodeVisualProps) {
-  const [dataUrl, setDataUrl] = useState<string>("");
+  const [dataUrl, setDataUrl] = useState<string | null>(null);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    if (!value) return;
+    let cancelled = false;
+
+    if (!value) {
+      return;
+    }
+
     QRCode.toDataURL(value, {
       width: size,
       margin: 1,
@@ -29,14 +36,40 @@ export default function QrCodeVisual({
         dark: darkColor,
         light: lightColor,
       },
+      errorCorrectionLevel: "M",
     })
-      .then((url) => setDataUrl(url))
+      .then((url) => {
+        if (!cancelled) {
+          setDataUrl(url);
+          setHasError(false);
+        }
+      })
       .catch((err) => {
-        console.error("Failed to generate QR code", err);
+        if (!cancelled) {
+          console.error("QR Code generation error:", err);
+          setHasError(true);
+        }
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, [value, size, darkColor, lightColor]);
 
-  if (!dataUrl) {
+  const currentDataUrl = value ? dataUrl : null;
+
+  if (hasError) {
+    return (
+      <div
+        style={{ width: size, height: size }}
+        className={`flex items-center justify-center border border-line bg-paper/50 ${className}`}
+      >
+        <span className="font-mono text-[10px] text-red-500">QR Gagal Dibuat</span>
+      </div>
+    );
+  }
+
+  if (!currentDataUrl) {
     return (
       <div
         style={{ width: size, height: size }}
@@ -48,11 +81,12 @@ export default function QrCodeVisual({
   }
 
   return (
-    <img
-      src={dataUrl}
+    <Image
+      src={currentDataUrl}
       alt="QR Code"
       width={size}
       height={size}
+      unoptimized
       className={`block select-none ${className}`}
     />
   );

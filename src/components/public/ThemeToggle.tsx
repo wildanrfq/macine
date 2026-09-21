@@ -1,16 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
+
+const emptySubscribe = () => () => {};
 
 export default function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const isClient = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
-  useEffect(() => {
-    setMounted(true);
-    const isCurrentlyDark = document.documentElement.classList.contains("dark");
-    setIsDark(isCurrentlyDark);
-  }, []);
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof document !== "undefined") {
+      return document.documentElement.classList.contains("dark");
+    }
+    return false;
+  });
 
   const toggleTheme = () => {
     const nextDark = !isDark;
@@ -25,7 +31,7 @@ export default function ThemeToggle() {
     }
   };
 
-  if (!mounted) {
+  if (!isClient) {
     return (
       <div className="h-8 w-8 rounded-full border border-line" />
     );

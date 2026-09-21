@@ -32,7 +32,7 @@ export default async function PayPage({ params }: PayPageProps) {
     const now = new Date();
     const isExpired = booking.expiresAt
       ? new Date(booking.expiresAt) < now
-      : Date.now() - new Date(booking.createdAt).getTime() > 15 * 60 * 1000;
+      : now.getTime() - new Date(booking.createdAt).getTime() > 15 * 60 * 1000;
 
     if (isExpired) {
       await prisma.$transaction(async (tx) => {

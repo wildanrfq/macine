@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
@@ -69,9 +70,13 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
             <div className="lg:col-span-4">
               <div className="border border-line bg-white p-2.5 shadow-warm">
                 <div className="aspect-[2/3] w-full overflow-hidden bg-ink">
-                  <img
+                  <Image
                     src={film.posterUrl}
                     alt={film.title}
+                    width={400}
+                    height={600}
+                    priority
+                    unoptimized
                     className="h-full w-full object-cover"
                   />
                 </div>

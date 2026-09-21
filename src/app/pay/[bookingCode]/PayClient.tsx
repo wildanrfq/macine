@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import QrCodeVisual from "@/components/ui/QrCodeVisual";
 
 interface PayClientProps {
@@ -28,7 +27,6 @@ interface PayClientProps {
 }
 
 export default function PayClient({ initialBooking }: PayClientProps) {
-  const router = useRouter();
   const [booking, setBooking] = useState(initialBooking);
   const [timeLeft, setTimeLeft] = useState<string>("");
   const [isSimulating, setIsSimulating] = useState(false);

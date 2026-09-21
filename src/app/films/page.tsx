@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
 import prisma from "@/lib/prisma";
@@ -133,9 +134,12 @@ export default async function FilmsPage({ searchParams }: FilmsPageProps) {
                       className="flex flex-col border border-line bg-white shadow-warm transition-shadow hover:shadow-warm-lg"
                     >
                       <div className="relative aspect-[2/3] w-full overflow-hidden bg-ink">
-                        <img
+                        <Image
                           src={film.posterUrl}
                           alt={film.title}
+                          width={360}
+                          height={540}
+                          unoptimized
                           className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                         />
                         <div className="absolute top-3 left-3 bg-[#F49924] px-2.5 py-0.5 font-mono text-xs font-bold tracking-wider text-white shadow-sm">
@@ -257,9 +261,12 @@ export default async function FilmsPage({ searchParams }: FilmsPageProps) {
                     className="border border-line bg-white p-5 shadow-warm"
                   >
                     <div className="aspect-[2/3] w-full overflow-hidden bg-ink">
-                      <img
+                      <Image
                         src={film.posterUrl}
                         alt={film.title}
+                        width={360}
+                        height={540}
+                        unoptimized
                         className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                       />
                     </div>
