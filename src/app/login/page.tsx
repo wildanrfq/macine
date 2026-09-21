@@ -107,7 +107,7 @@ function LoginForm() {
             disabled={isLoading}
             className="w-full bg-[#D21871] py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#B4115F] disabled:opacity-50"
           >
-            {isLoading ? "Memverifikasi..." : "Masuk ke Akun &rarr;"}
+            {isLoading ? "Memverifikasi..." : "Masuk ke Akun"}
           </button>
         </div>
       </form>

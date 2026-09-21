@@ -45,7 +45,7 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
             href="/films"
             className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-[#1D99DE] transition-colors hover:text-[#0F6696]"
           >
-            &larr; Kembali ke Daftar Film
+            ← Kembali ke Daftar Film
           </Link>
 
           <div className="mt-8 grid grid-cols-1 gap-12 lg:grid-cols-12">
@@ -195,7 +195,7 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
                               href={`/book/${st.id}`}
                               className="bg-[#D21871] px-5 py-2 text-xs font-semibold uppercase tracking-wider text-white shadow-sm transition-all hover:bg-[#B4115F]"
                             >
-                              Pilih Kursi
+                              Pesan Tiket
                             </Link>
                           </div>
                         </div>

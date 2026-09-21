@@ -163,7 +163,7 @@ export default async function HomePage() {
                 href="/films"
                 className="text-sm font-semibold text-[#1D99DE] transition-colors hover:text-[#0F6696] hover:underline"
               >
-                Lihat Semua Film &rarr;
+                Lihat Semua Film
               </Link>
             </div>
 

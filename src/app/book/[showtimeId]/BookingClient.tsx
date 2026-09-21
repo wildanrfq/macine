@@ -404,7 +404,7 @@ export default function BookingClient({
                     onClick={() => setStep(2)}
                     className="bg-[#D21871] px-8 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#B4115F] hover:shadow-lg"
                   >
-                    Lanjutkan ke Data Pemesan ({ticketCount} Tiket) &rarr;
+                    Lanjutkan ke Data Pemesan ({ticketCount} Tiket)
                   </button>
                 </div>
               </div>
@@ -497,15 +497,15 @@ export default function BookingClient({
                   onClick={() => setStep(1)}
                   className="border border-line bg-white px-4 py-2 text-xs font-mono text-reel hover:border-[#1D99DE] hover:text-[#1D99DE]"
                 >
-                  &larr; Ubah Jumlah Tiket
+                  ← Ubah Jumlah Tiket
                 </button>
 
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="bg-[#D21871] px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#B4115F] disabled:opacity-50"
+                  className="bg-[#D21871] px-8 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#B4115F] disabled:opacity-50"
                 >
-                  {isLoading ? "Memproses Tagihan..." : "Buat Tagihan QRIS &rarr;"}
+                  {isLoading ? "Memproses..." : "Bayar"}
                 </button>
               </div>
             </form>
@@ -739,7 +739,7 @@ export default function BookingClient({
                 href="/films"
                 className="border border-line bg-white px-4 py-2 text-xs font-mono text-reel hover:border-[#1D99DE] hover:text-[#1D99DE]"
               >
-                &larr; Kembali ke Katalog Film
+                ← Kembali ke Katalog Film
               </Link>
 
               <div className="flex items-center gap-3">
@@ -747,7 +747,7 @@ export default function BookingClient({
                   href="/dashboard"
                   className="bg-[#D21871] px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-[#B4115F]"
                 >
-                  Buka Tiket Saya (Dashboard) &rarr;
+                  Buka Tiket Saya (Dashboard)
                 </Link>
               </div>
             </div>

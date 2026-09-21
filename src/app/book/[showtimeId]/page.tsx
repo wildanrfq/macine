@@ -50,7 +50,7 @@ export default async function BookingPage({ params }: BookingPageProps) {
             href={`/films/${showtime.film.id}`}
             className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-[#1D99DE] hover:text-[#0F6696]"
           >
-            &larr; Kembali ke Detail Film
+            ← Kembali ke Detail Film
           </Link>
 
           <h1 className="mt-4 font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
