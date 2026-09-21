@@ -27,7 +27,7 @@ export default async function HomePage() {
       <main className="flex-1">
         {/* Asymmetric Poster-forward Marquee Hero with Warm White Base & Color Accents */}
         {featuredFilm && (
-          <section className="relative overflow-hidden border-b border-line bg-gradient-to-b from-[#FAF8F5] via-[#FDFBF7] to-[#FAF8F5] py-16 md:py-24">
+          <section className="relative overflow-hidden border-b border-line py-16 md:py-24">
             {/* Ambient cinema glows in brand colors */}
             <div className="pointer-events-none absolute -top-24 -left-20 h-96 w-96 rounded-full bg-[#1D99DE]/10 blur-[110px] ambient-cinema-glow" />
             <div className="pointer-events-none absolute top-1/3 -right-20 h-96 w-96 rounded-full bg-[#F49924]/12 blur-[120px] ambient-cinema-glow" />

@@ -8,7 +8,7 @@ export default function AboutPage() {
 
       <main className="flex-1">
         {/* Header with Warm White Base & Cinema Ambient Accents */}
-        <section className="relative overflow-hidden border-b border-line bg-gradient-to-b from-[#FAF8F5] via-[#FDFBF7] to-[#FAF8F5] py-16 md:py-24">
+        <section className="relative overflow-hidden border-b border-line py-16 md:py-24">
           <div className="pointer-events-none absolute -top-20 -left-10 h-80 w-80 rounded-full bg-[#1D99DE]/10 blur-[100px]" />
           <div className="pointer-events-none absolute -bottom-10 right-10 h-80 w-80 rounded-full bg-[#F49924]/12 blur-[100px]" />
 

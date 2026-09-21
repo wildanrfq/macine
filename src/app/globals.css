@@ -95,10 +95,24 @@ header[class*="bg-paper"] {
   background-color: var(--paper) !important;
 }
 
+.dark [class*="from-\[\#FAF8F5\]"],
+.dark [class*="via-\[\#FDFBF7\]"],
+.dark [class*="to-\[\#FAF8F5\]"] {
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
 .dark input,
 .dark textarea,
 .dark select {
-  color: var(--ink);
+  color: var(--ink) !important;
+  background-color: var(--paper-warm) !important;
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  background-color: var(--paper-card) !important;
 }
 
 .dark input::placeholder,
