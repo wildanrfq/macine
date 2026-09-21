@@ -4,20 +4,30 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import UserNavMenu from "./UserNavMenu";
 
+type AuthUser = {
+  id: string;
+  name: string;
+  email: string;
+} | null;
+
+let cachedUser: AuthUser | undefined = undefined;
+
 interface NavbarProps {
-  initialUser?: {
-    id: string;
-    name: string;
-    email: string;
-  } | null;
+  initialUser?: AuthUser;
 }
 
 export default function Navbar({ initialUser }: NavbarProps) {
-  const [user, setUser] = useState(initialUser ?? null);
+  const [user, setUser] = useState<AuthUser>(initialUser ?? cachedUser ?? null);
 
   useEffect(() => {
     if (initialUser !== undefined) {
       setUser(initialUser);
+      cachedUser = initialUser;
+      return;
+    }
+
+    if (cachedUser !== undefined) {
+      setUser(cachedUser);
       return;
     }
 
@@ -25,11 +35,15 @@ export default function Navbar({ initialUser }: NavbarProps) {
     fetch("/api/auth/me")
       .then((res) => (res.ok ? res.json() : { user: null }))
       .then((data) => {
-        if (isMounted && data.user) {
-          setUser(data.user);
+        const fetchedUser: AuthUser = data.user ?? null;
+        cachedUser = fetchedUser;
+        if (isMounted) {
+          setUser(fetchedUser);
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        cachedUser = null;
+      });
 
     return () => {
       isMounted = false;

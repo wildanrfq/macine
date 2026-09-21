@@ -3,7 +3,7 @@ import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
 import prisma from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function FilmsPage() {
   const films = await prisma.film.findMany({

@@ -4,10 +4,19 @@ import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
 import prisma from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 interface FilmDetailPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateStaticParams() {
+  try {
+    const films = await prisma.film.findMany({ select: { id: true } });
+    return films.map((f) => ({ id: f.id }));
+  } catch {
+    return [];
+  }
 }
 
 export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
