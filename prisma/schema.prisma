@@ -11,8 +11,11 @@ model User {
   id           String    @id @default(cuid())
   name         String
   email        String    @unique
-  passwordHash String
+  passwordHash String?
   phone        String?
+  authProvider String    @default("LOCAL")
+  googleId     String?   @unique
+  avatarUrl    String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 

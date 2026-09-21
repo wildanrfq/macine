@@ -27,6 +27,16 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!user.passwordHash) {
+      return NextResponse.json(
+        {
+          error:
+            "Akun ini terdaftar melalui akun Google. Silakan masuk menggunakan tombol 'Masuk dengan Google'.",
+        },
+        { status: 400 }
+      );
+    }
+
     const isMatch = verifyPassword(password, user.passwordHash);
     if (!isMatch) {
       return NextResponse.json(

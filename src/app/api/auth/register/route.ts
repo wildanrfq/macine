@@ -28,6 +28,16 @@ export async function POST(request: Request) {
     });
 
     if (existingUser) {
+      if (existingUser.authProvider === "GOOGLE" || !existingUser.passwordHash) {
+        return NextResponse.json(
+          {
+            error:
+              "Email ini sudah terdaftar menggunakan akun Google. Anda tidak dapat mendaftar manual dengan email ini, silakan masuk menggunakan tombol 'Masuk dengan Google'.",
+          },
+          { status: 409 }
+        );
+      }
+
       return NextResponse.json(
         { error: "Email sudah terdaftar. Silakan masuk ke akun Anda." },
         { status: 409 }
@@ -42,6 +52,7 @@ export async function POST(request: Request) {
         email: normalizedEmail,
         phone: phone ? phone.trim() : null,
         passwordHash,
+        authProvider: "LOCAL",
       },
       select: {
         id: true,
