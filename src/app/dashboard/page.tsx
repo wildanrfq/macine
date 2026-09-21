@@ -37,6 +37,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         id: string;
         title: string;
         posterUrl: string;
+        slug?: string;
       };
     };
     tickets: Array<{
@@ -397,7 +398,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                               </Link>
                             ) : isExpired ? (
                               <Link
-                                href={`/films/${b.showtime.film.id}`}
+                                href={`/films/${b.showtime.film.slug || b.showtime.film.id}`}
                                 className="font-semibold text-[#1D99DE] hover:underline"
                               >
                                 Pesan Ulang

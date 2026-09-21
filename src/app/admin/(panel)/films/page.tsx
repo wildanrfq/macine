@@ -92,7 +92,7 @@ export default async function AdminFilmsPage() {
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <Link
-                      href={`/films/${film.id}`}
+                      href={`/films/${film.slug || film.id}`}
                       target="_blank"
                       className="text-xs text-reel underline hover:text-ink"
                     >

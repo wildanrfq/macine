@@ -19,6 +19,7 @@ interface PayClientProps {
     expiresAt: string | null;
     filmTitle: string;
     filmId: string;
+    filmSlug?: string;
     posterUrl: string;
     auditorium: string;
     startTime: string;
@@ -339,7 +340,7 @@ export default function PayClient({ initialBooking }: PayClientProps) {
 
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
-              href={`/films/${booking.filmId}`}
+              href={`/films/${booking.filmSlug || booking.filmId}`}
               className="bg-[#D21871] px-6 py-2.5 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-sm hover:bg-[#B4115F]"
             >
               Pesan Ulang Tiket Ini →

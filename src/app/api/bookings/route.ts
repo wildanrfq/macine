@@ -60,9 +60,28 @@ export async function POST(request: Request) {
 
     const unitPrice = showtime.priceOverride ?? showtime.film.price;
     const totalAmount = unitPrice * count;
-    const bookingCode = `BM-${Date.now().toString().slice(-6)}-${Math.floor(
-      1000 + Math.random() * 9000
-    )}`;
+
+    const programTag = (showtime.film.programName || "sorot").toUpperCase();
+    const programVol = showtime.film.programVol || 1;
+    const prefix = `BM-${programTag}-VOL${programVol}-`;
+
+    const existingCount = await prisma.booking.count({
+      where: {
+        bookingCode: {
+          startsWith: prefix,
+        },
+      },
+    });
+
+    let seq = existingCount + 1;
+    let bookingCode = `${prefix}${seq.toString().padStart(2, "0")}`;
+
+    let isTaken = await prisma.booking.findUnique({ where: { bookingCode } });
+    while (isTaken) {
+      seq += 1;
+      bookingCode = `${prefix}${seq.toString().padStart(2, "0")}`;
+      isTaken = await prisma.booking.findUnique({ where: { bookingCode } });
+    }
 
     const qrisData = await createQrisCharge({
       bookingCode,

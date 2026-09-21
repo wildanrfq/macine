@@ -5,18 +5,38 @@ import prisma from "@/lib/prisma";
 
 export const revalidate = 60;
 
-export default async function FilmsPage() {
+interface FilmsPageProps {
+  searchParams?: Promise<{ category?: string }>;
+}
+
+export default async function FilmsPage({ searchParams }: FilmsPageProps) {
+  const sp = searchParams ? await searchParams : {};
+  const selectedCategory = sp.category?.toUpperCase() || "ALL";
+
+  const whereClause: { category?: string } = {};
+  if (selectedCategory !== "ALL" && ["FEATURE", "DOCUMENTARY", "SHORT"].includes(selectedCategory)) {
+    whereClause.category = selectedCategory;
+  }
+
   const films = await prisma.film.findMany({
+    where: whereClause,
     include: {
       showtimes: {
         orderBy: { startTime: "asc" },
       },
     },
-    orderBy: [{ isNowShowing: "desc" }, { createdAt: "desc" }],
+    orderBy: [{ isNowShowing: "desc" }, { createdAt: "asc" }],
   });
 
   const nowShowing = films.filter((f) => f.isNowShowing);
   const comingSoon = films.filter((f) => f.isComingSoon);
+
+  const categories = [
+    { key: "ALL", label: "Semua Program", desc: "Seluruh kurasi film" },
+    { key: "FEATURE", label: "Film Panjang", desc: "Sinema Sorot" },
+    { key: "DOCUMENTARY", label: "Dokumenter", desc: "Rekam Jejak" },
+    { key: "SHORT", label: "Film Pendek", desc: "Kisah Singkat" },
+  ];
 
   return (
     <div className="flex min-h-screen flex-col bg-paper text-ink">
@@ -29,16 +49,42 @@ export default async function FilmsPage() {
             <div className="inline-flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-[#1D99DE]" />
               <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1D99DE]">
-                Program Sinema
+                Kurasi Sinema
               </span>
             </div>
             <h1 className="mt-2 font-display text-4xl font-bold tracking-tight text-ink sm:text-5xl">
               Katalog Film & Jadwal
             </h1>
-            <p className="mt-2 max-w-xl text-sm text-reel">
-              Setiap film dikurasi khusus untuk diputar di auditorium 24 kursi.
-              Pilih film untuk melihat sinopsis lengkap dan memesan kursi.
+            <p className="mt-2 max-w-2xl text-sm text-reel">
+              Pilihan sinema independen dari film panjang, film dokumenter bersejarah, hingga film pendek terbaik. Diputar intim di auditorium berkapasitas 20–24 kursi.
             </p>
+
+            {/* Category Filter Tabs */}
+            <div className="mt-8 flex flex-wrap gap-2 pt-2">
+              {categories.map((cat) => {
+                const isActive = selectedCategory === cat.key;
+                return (
+                  <Link
+                    key={cat.key}
+                    href={cat.key === "ALL" ? "/films" : `/films?category=${cat.key}`}
+                    className={`flex items-center gap-2 border px-4 py-2 font-mono text-xs font-semibold transition-all ${
+                      isActive
+                        ? "border-[#D21871] bg-[#D21871] text-white shadow-sm"
+                        : "border-line bg-white text-ink hover:border-[#1D99DE] hover:text-[#1D99DE]"
+                    }`}
+                  >
+                    <span>{cat.label}</span>
+                    <span
+                      className={`text-[10px] ${
+                        isActive ? "text-white/80" : "text-reel"
+                      }`}
+                    >
+                      ({cat.desc})
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
 
           {/* Now Showing Section */}
@@ -52,106 +98,144 @@ export default async function FilmsPage() {
               </span>
             </div>
 
-            <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {nowShowing.map((film) => (
-                <article
-                  key={film.id}
-                  className="flex flex-col border border-line bg-white shadow-warm transition-shadow hover:shadow-warm-lg"
+            {nowShowing.length === 0 ? (
+              <div className="mt-8 border border-dashed border-line bg-white p-12 text-center shadow-warm">
+                <p className="text-sm text-reel">
+                  Belum ada film yang sedang tayang untuk kategori ini.
+                </p>
+                <Link
+                  href="/films"
+                  className="mt-4 inline-block font-mono text-xs font-semibold text-[#1D99DE] hover:underline"
                 >
-                  <div className="relative aspect-[3/4] w-full overflow-hidden bg-ink">
-                    <img
-                      src={film.posterUrl}
-                      alt={film.title}
-                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                    />
-                    <div className="absolute top-3 left-3 bg-[#F49924] px-2.5 py-0.5 font-mono text-xs font-bold tracking-wider text-white shadow-sm">
-                      SEDANG TAYANG
-                    </div>
-                  </div>
+                  Lihat Semua Program Film →
+                </Link>
+              </div>
+            ) : (
+              <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                {nowShowing.map((film) => {
+                  const programLabel =
+                    film.category === "DOCUMENTARY"
+                      ? "Rekam Jejak"
+                      : film.category === "SHORT"
+                      ? "Kisah Singkat"
+                      : "Sinema Sorot";
 
-                    <div className="flex flex-1 flex-col justify-between p-6">
-                      <div>
-                        <div className="flex items-center justify-between text-xs font-mono">
-                          <span className="border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2 py-0.5 font-semibold text-[#1277B0]">
-                            {film.genre}
-                          </span>
-                          <span className="text-reel">{film.durationMinutes} Menit</span>
+                  const categoryLabel =
+                    film.category === "DOCUMENTARY"
+                      ? "Dokumenter"
+                      : film.category === "SHORT"
+                      ? "Film Pendek"
+                      : "Film Panjang";
+
+                  return (
+                    <article
+                      key={film.id}
+                      className="flex flex-col border border-line bg-white shadow-warm transition-shadow hover:shadow-warm-lg"
+                    >
+                      <div className="relative aspect-[2/3] w-full overflow-hidden bg-ink">
+                        <img
+                          src={film.posterUrl}
+                          alt={film.title}
+                          className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                        />
+                        <div className="absolute top-3 left-3 bg-[#F49924] px-2.5 py-0.5 font-mono text-xs font-bold tracking-wider text-white shadow-sm">
+                          SEDANG TAYANG
                         </div>
-
-                        <h3 className="mt-2.5 font-display text-3xl font-bold text-ink">
-                          {film.title}
-                        </h3>
-
-                        {film.originalTitle && (
-                          <p className="text-xs italic text-reel">
-                            {film.originalTitle} ({film.releaseYear})
-                          </p>
-                        )}
-
-                        <p className="mt-3 text-sm leading-relaxed text-reel">
-                          {film.synopsis}
-                        </p>
+                        <div className="absolute top-3 right-3 bg-ink/90 backdrop-blur-sm border border-line px-2 py-0.5 font-mono text-[10px] font-bold text-white shadow-sm">
+                          {categoryLabel.toUpperCase()}
+                        </div>
                       </div>
 
-                      <div className="mt-6 border-t border-line pt-4">
-                        <div className="flex flex-wrap items-center justify-between gap-4">
-                          <div>
-                            <span className="block font-mono text-xs text-reel">
-                              Tiket Masuk
+                      <div className="flex flex-1 flex-col justify-between p-6">
+                        <div>
+                          <div className="flex items-center justify-between text-xs font-mono">
+                            <span className="border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2 py-0.5 font-semibold text-[#1277B0]">
+                              {programLabel} Vol. {film.programVol}
                             </span>
-                            <div className="flex items-center gap-1.5 font-mono text-sm font-bold text-ink">
-                              <span className="h-1.5 w-1.5 rounded-full bg-[#F49924]" />
-                              <span>Rp {film.price.toLocaleString("id-ID")}</span>
+                            <span className="text-reel font-semibold">{film.durationMinutes} Menit</span>
+                          </div>
+
+                          <h3 className="mt-3 font-display text-2xl font-bold text-ink sm:text-3xl">
+                            <Link
+                              href={`/films/${film.slug}`}
+                              className="transition-colors hover:text-[#1D99DE]"
+                            >
+                              {film.title}
+                            </Link>
+                          </h3>
+
+                          {film.originalTitle && (
+                            <p className="text-xs italic text-reel">
+                              {film.originalTitle} ({film.releaseYear})
+                            </p>
+                          )}
+
+                          <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-reel">
+                            {film.synopsis}
+                          </p>
+                        </div>
+
+                        <div className="mt-6 border-t border-line pt-4">
+                          <div className="flex flex-wrap items-center justify-between gap-4">
+                            <div>
+                              <span className="block font-mono text-xs text-reel">
+                                Tiket Masuk
+                              </span>
+                              <div className="flex items-center gap-1.5 font-mono text-sm font-bold text-ink">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#F49924]" />
+                                <span>Rp {film.price.toLocaleString("id-ID")}</span>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <Link
+                                href={`/films/${film.slug}`}
+                                className="border border-line bg-white px-3.5 py-1.5 text-xs font-medium text-ink transition-colors hover:border-[#1D99DE] hover:text-[#1D99DE]"
+                              >
+                                Detail Film
+                              </Link>
+
+                              {film.showtimes.length > 0 && (
+                                <Link
+                                  href={`/book/${film.showtimes[0].id}`}
+                                  className="bg-[#D21871] px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-white shadow-sm transition-all hover:bg-[#B4115F]"
+                                >
+                                  Pesan Tiket
+                                </Link>
+                              )}
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-2">
-                            <Link
-                              href={`/films/${film.id}`}
-                              className="border border-line bg-white px-3.5 py-1.5 text-xs font-medium text-ink transition-colors hover:border-[#1D99DE] hover:text-[#1D99DE]"
-                            >
-                              Detail Film
-                            </Link>
-
-                            {film.showtimes.length > 0 && (
-                              <Link
-                                href={`/book/${film.showtimes[0].id}`}
-                                className="bg-[#D21871] px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm transition-all hover:bg-[#B4115F]"
-                              >
-                                Pesan Tiket
-                              </Link>
-                            )}
-                          </div>
+                          {/* Showtimes badges */}
+                          {film.showtimes.length > 0 && (
+                            <div className="mt-4 flex flex-wrap items-center gap-2">
+                              <span className="font-mono text-xs text-reel">
+                                Jadwal:
+                              </span>
+                              {film.showtimes.map((st) => (
+                                <Link
+                                  key={st.id}
+                                  href={`/book/${st.id}`}
+                                  className="border border-line bg-[#FAF8F5] px-2.5 py-0.5 font-mono text-xs font-semibold text-ink transition-colors hover:border-[#1D99DE] hover:bg-[#1D99DE] hover:text-white"
+                                >
+                                  {new Date(st.startTime).toLocaleTimeString(
+                                    "id-ID",
+                                    {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    }
+                                  )}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
                         </div>
-
-                        {/* Showtimes badges */}
-                        {film.showtimes.length > 0 && (
-                          <div className="mt-4 flex flex-wrap items-center gap-2">
-                            <span className="font-mono text-xs text-reel">
-                              Jadwal:
-                            </span>
-                            {film.showtimes.map((st) => (
-                              <Link
-                                key={st.id}
-                                href={`/book/${st.id}`}
-                                className="border border-line bg-[#FAF8F5] px-2.5 py-0.5 font-mono text-xs font-semibold text-ink transition-colors hover:border-[#1D99DE] hover:bg-[#1D99DE] hover:text-white"
-                              >
-                                {new Date(st.startTime).toLocaleTimeString(
-                                  "id-ID",
-                                  {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  }
-                                )}
-                              </Link>
-                            ))}
-                          </div>
-                        )}
                       </div>
-                    </div>
-                  </article>
-                ))}
-            </div>
+                    </article>
+                  );
+                })}
+              </div>
+            )}
           </section>
 
           {/* Coming Soon Section */}
@@ -172,7 +256,7 @@ export default async function FilmsPage() {
                     key={film.id}
                     className="border border-line bg-white p-5 shadow-warm"
                   >
-                    <div className="aspect-[3/4] w-full overflow-hidden bg-ink">
+                    <div className="aspect-[2/3] w-full overflow-hidden bg-ink">
                       <img
                         src={film.posterUrl}
                         alt={film.title}
@@ -184,7 +268,9 @@ export default async function FilmsPage() {
                         {film.genre}
                       </span>
                       <h3 className="mt-2.5 font-display text-xl font-bold text-ink">
-                        {film.title}
+                        <Link href={`/films/${film.slug}`} className="hover:text-[#1D99DE]">
+                          {film.title}
+                        </Link>
                       </h3>
                       <p className="mt-1 font-mono text-xs text-reel">
                         Sutradara: {film.director}

@@ -7,23 +7,25 @@ import prisma from "@/lib/prisma";
 export const revalidate = 60;
 
 interface FilmDetailPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
   try {
-    const films = await prisma.film.findMany({ select: { id: true } });
-    return films.map((f) => ({ id: f.id }));
+    const films = await prisma.film.findMany({ select: { slug: true } });
+    return films.map((f) => ({ slug: f.slug }));
   } catch {
     return [];
   }
 }
 
 export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
-  const { id } = await params;
+  const { slug } = await params;
 
-  const film = await prisma.film.findUnique({
-    where: { id },
+  const film = await prisma.film.findFirst({
+    where: {
+      OR: [{ slug }, { id: slug }],
+    },
     include: {
       showtimes: {
         orderBy: { startTime: "asc" },
@@ -34,6 +36,20 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
   if (!film) {
     notFound();
   }
+
+  const categoryLabel =
+    film.category === "DOCUMENTARY"
+      ? "Film Dokumenter"
+      : film.category === "SHORT"
+      ? "Film Pendek"
+      : "Film Panjang";
+
+  const programLabel =
+    film.category === "DOCUMENTARY"
+      ? "Rekam Jejak"
+      : film.category === "SHORT"
+      ? "Kisah Singkat"
+      : "Sinema Sorot";
 
   return (
     <div className="flex min-h-screen flex-col bg-paper text-ink">
@@ -65,10 +81,24 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-[#D21871]" />
                   <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-reel">
-                    Informasi Film
+                    Informasi Program
                   </h3>
                 </div>
                 <dl className="mt-4 space-y-3 text-sm">
+                  <div>
+                    <dt className="text-xs text-reel">Program Kurasi</dt>
+                    <dd className="font-bold text-ink">
+                      {programLabel} Vol. {film.programVol}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs text-reel">Kategori</dt>
+                    <dd className="font-medium text-ink">
+                      <span className="inline-block border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2 py-0.5 font-mono text-xs font-semibold text-[#1277B0]">
+                        {categoryLabel}
+                      </span>
+                    </dd>
+                  </div>
                   <div>
                     <dt className="text-xs text-reel">Sutradara</dt>
                     <dd className="font-medium text-ink">{film.director}</dd>
@@ -90,9 +120,7 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
                   <div>
                     <dt className="text-xs text-reel">Genre</dt>
                     <dd className="font-medium text-ink">
-                      <span className="inline-block border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2 py-0.5 font-mono text-xs font-semibold text-[#1277B0]">
-                        {film.genre}
-                      </span>
+                      {film.genre}
                     </dd>
                   </div>
                   <div>
@@ -100,7 +128,7 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
                     <dd className="font-medium text-ink">{film.releaseYear}</dd>
                   </div>
                   <div className="border-t border-line pt-3">
-                    <dt className="text-xs text-reel">Harga Tiket Standar</dt>
+                    <dt className="text-xs text-reel">Harga Tiket</dt>
                     <dd className="flex items-center gap-1.5 font-mono font-bold text-ink">
                       <span className="h-1.5 w-1.5 rounded-full bg-[#F49924]" />
                       <span>Rp {film.price.toLocaleString("id-ID")}</span>
@@ -113,11 +141,16 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
             {/* Synopsis & Showtimes Column */}
             <div className="lg:col-span-8">
               <div>
-                <span className="border border-[#F49924]/30 bg-[#F49924]/10 px-2.5 py-0.5 font-mono text-xs font-bold uppercase tracking-wider text-[#A6610A]">
-                  {film.isNowShowing ? "Sedang Tayang" : "Segera Hadir"}
-                </span>
+                <div className="flex flex-wrap items-center gap-2 mb-2">
+                  <span className="border border-[#F49924]/30 bg-[#F49924]/10 px-2.5 py-0.5 font-mono text-xs font-bold uppercase tracking-wider text-[#A6610A]">
+                    {film.isNowShowing ? "Sedang Tayang" : "Segera Hadir"}
+                  </span>
+                  <span className="border border-line bg-paper px-2.5 py-0.5 font-mono text-xs text-reel">
+                    Program: {programLabel} Vol. {film.programVol}
+                  </span>
+                </div>
 
-                <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-ink sm:text-6xl">
+                <h1 className="mt-2 font-display text-4xl font-bold tracking-tight text-ink sm:text-5xl">
                   {film.title}
                 </h1>
 
@@ -143,8 +176,7 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
                   Pilih Jadwal Pemutaran
                 </h2>
                 <p className="mt-1 text-sm text-reel">
-                  Auditorium 24 kursi. Setiap pemesanan mendapatkan alokasi
-                  kursi terpilih dan tiket digital QR.
+                  Auditorium intim 20–24 kursi. Setiap pemesanan mendapatkan tiket digital resmi dengan QR code.
                 </p>
 
                 {film.showtimes.length > 0 ? (
@@ -205,8 +237,7 @@ export default async function FilmDetailPage({ params }: FilmDetailPageProps) {
                 ) : (
                   <div className="mt-6 border border-dashed border-line bg-white p-8 text-center shadow-warm">
                     <p className="text-sm text-reel">
-                      Jadwal pemutaran untuk film ini belum dibuka. Silakan cek
-                      kembali menjelang akhir pekan.
+                      Jadwal pemutaran untuk film ini belum dibuka. Silakan periksa kembali jadwal pekan ini.
                     </p>
                   </div>
                 )}

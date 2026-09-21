@@ -129,7 +129,7 @@ export default async function HomePage() {
 
                   <div className="mt-8 flex items-center gap-5">
                     <Link
-                      href={`/films/${featuredFilm.id}`}
+                      href={`/films/${featuredFilm.slug || featuredFilm.id}`}
                       className="bg-[#D21871] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#B4115F] hover:shadow-lg"
                     >
                       Detail Film & Sinopsis
@@ -185,13 +185,19 @@ export default async function HomePage() {
                     <div>
                       <div className="flex items-center justify-between text-xs font-mono">
                         <span className="border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2 py-0.5 font-semibold text-[#1277B0]">
-                          {film.genre}
+                          {film.category === "DOCUMENTARY"
+                            ? "Dokumenter"
+                            : film.category === "SHORT"
+                            ? "Film Pendek"
+                            : "Film Panjang"}
                         </span>
-                        <span className="text-reel">{film.durationMinutes} Min</span>
+                        <span className="text-reel font-semibold">{film.durationMinutes} Min</span>
                       </div>
 
                       <h3 className="mt-2.5 font-display text-2xl font-bold text-ink">
-                        {film.title}
+                        <Link href={`/films/${film.slug || film.id}`} className="hover:text-[#1D99DE]">
+                          {film.title}
+                        </Link>
                       </h3>
 
                       <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-reel">
@@ -206,7 +212,7 @@ export default async function HomePage() {
                       </div>
 
                       <Link
-                        href={`/films/${film.id}`}
+                        href={`/films/${film.slug || film.id}`}
                         className="border border-[#1D99DE] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#1D99DE] shadow-sm transition-all hover:bg-[#1D99DE] hover:text-white"
                       >
                         Jadwal & Tiket

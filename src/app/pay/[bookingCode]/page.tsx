@@ -61,6 +61,7 @@ export default async function PayPage({ params }: PayPageProps) {
     expiresAt: booking.expiresAt ? booking.expiresAt.toISOString() : null,
     filmTitle: booking.showtime.film.title,
     filmId: booking.showtime.film.id,
+    filmSlug: booking.showtime.film.slug || booking.showtime.film.id,
     posterUrl: booking.showtime.film.posterUrl,
     auditorium: booking.showtime.auditorium,
     startTime: booking.showtime.startTime.toISOString(),
