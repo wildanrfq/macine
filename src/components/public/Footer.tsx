@@ -10,7 +10,7 @@ export default function Footer() {
               <span className="h-2.5 w-2.5 rounded-full bg-[#1D99DE]" />
               <span className="h-2.5 w-2.5 rounded-full bg-[#F49924]" />
               <span className="h-2.5 w-2.5 rounded-full bg-[#D21871]" />
-              <h3 className="font-display text-2xl font-bold tracking-tight text-ink ml-1">
+              <h3 className="font-serif text-2xl font-medium tracking-tight text-ink ml-1">
                 BIOSKOP MINI
               </h3>
             </div>
@@ -22,7 +22,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-ink">Kunjungan</h4>
+            <h4 className="font-mono text-xs uppercase tracking-wider text-ink font-medium">Kunjungan</h4>
             <p className="mt-3 text-sm leading-relaxed text-reel">
               Jl. Cikini Raya No. 42
               <br />
@@ -33,8 +33,8 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-ink">Navigasi</h4>
-            <ul className="mt-3 space-y-2 text-reel">
+            <h4 className="font-mono text-xs uppercase tracking-wider text-ink font-medium">Navigasi</h4>
+            <ul className="mt-3 space-y-2 text-sm text-reel">
               <li>
                 <Link href="/films" className="transition-colors hover:text-[#1D99DE]">
                   Daftar Film
@@ -56,7 +56,7 @@ export default function Footer() {
 
         <div className="mt-12 flex flex-col justify-between border-t border-line pt-6 text-xs text-reel md:flex-row">
           <p>&copy; 2026 Bioskop Mini. Hak cipta dilindungi.</p>
-          <div className="mt-2 flex items-center gap-2 md:mt-0">
+          <div className="mt-2 flex items-center gap-2 md:mt-0 font-mono text-xs">
             <span className="h-1.5 w-1.5 rounded-full bg-[#F49924]" />
             <span>Proyeksi 4K DCP dan tata suara 7.1</span>
           </div>

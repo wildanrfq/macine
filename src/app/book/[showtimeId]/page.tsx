@@ -58,12 +58,12 @@ export default async function BookingPage({ params }: BookingPageProps) {
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <Link
             href={`/films/${showtime.film.slug || showtime.film.id}`}
-            className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-[#1D99DE] hover:text-[#0F6696]"
+            className="inline-flex items-center gap-1.5 font-mono text-xs text-ink hover:text-reel underline underline-offset-4 transition-colors"
           >
-            ← Kembali ke Detail Film
+            Kembali ke Detail Film
           </Link>
 
-          <h1 className="mt-4 font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+          <h1 className="mt-4 font-serif text-3xl font-medium tracking-tight text-ink sm:text-4xl">
             Pemesanan Tiket
           </h1>
 
@@ -77,6 +77,7 @@ export default async function BookingPage({ params }: BookingPageProps) {
                 price: showtime.priceOverride ?? showtime.film.price,
                 film: {
                   id: showtime.film.id,
+                  slug: showtime.film.slug,
                   title: showtime.film.title,
                   posterUrl: showtime.film.posterUrl,
                   durationMinutes: showtime.film.durationMinutes,

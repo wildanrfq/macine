@@ -3,6 +3,7 @@ import Image from "next/image";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
 import { getCachedFilms } from "@/lib/films";
+import { getFilmPalette } from "@/lib/film-palettes";
 
 export const revalidate = 60;
 
@@ -14,25 +15,25 @@ export default async function HomePage() {
   const nowShowing = otherFilms.filter((f) => f.isNowShowing);
   const comingSoon = films.filter((f) => f.isComingSoon);
 
+  const palette = featuredFilm ? getFilmPalette(featuredFilm.slug || featuredFilm.id) : null;
+
   return (
     <div className="flex min-h-screen flex-col bg-paper text-ink">
       <Navbar />
 
       <main className="flex-1">
-        {/* Asymmetric Poster-forward Marquee Hero with Warm White Base & Color Accents */}
-        {featuredFilm && (
-          <section className="relative overflow-hidden border-b border-line py-10 sm:py-16 md:py-24">
-            {/* Ambient cinema glows in brand colors */}
-            <div className="pointer-events-none absolute -top-24 -left-20 h-96 w-96 rounded-full bg-[#1D99DE]/10 blur-[110px] ambient-cinema-glow" />
-            <div className="pointer-events-none absolute top-1/3 -right-20 h-96 w-96 rounded-full bg-[#F49924]/12 blur-[120px] ambient-cinema-glow" />
-            <div className="pointer-events-none absolute -bottom-20 left-1/3 h-80 w-80 rounded-full bg-[#D21871]/10 blur-[100px] ambient-cinema-glow" />
+        {/* Editorial Poster-forward Hero with Curated Film Accent */}
+        {featuredFilm && palette && (
+          <section className="relative overflow-hidden border-b border-line bg-paper py-10 sm:py-16 md:py-20">
+            {/* 35mm film grain overlay */}
+            <div className="pointer-events-none absolute inset-0 film-grain opacity-40 dark:opacity-30" />
 
             <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
               <div className="grid grid-cols-1 items-center gap-8 lg:gap-12 lg:grid-cols-12">
-                {/* Poster column */}
+                {/* Poster column: physical print framing with sharp edges & offset shadow */}
                 <div className="lg:col-span-5 flex justify-center lg:justify-start">
-                  <div className="relative aspect-[2/3] w-full max-w-[280px] sm:max-w-sm overflow-hidden border border-line bg-white p-2.5 shadow-warm-lg">
-                    <div className="relative h-full w-full overflow-hidden bg-[#121110]">
+                  <div className="relative aspect-[2/3] w-full max-w-[280px] sm:max-w-sm rounded-none border border-line bg-paper-card p-2 sm:p-2.5 shadow-[4px_4px_0px_0px_rgba(18,17,16,0.12)] dark:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.5)]">
+                    <div className="relative h-full w-full overflow-hidden bg-ink rounded-none">
                       <Image
                         src={featuredFilm.posterUrl}
                         alt={featuredFilm.title}
@@ -40,7 +41,7 @@ export default async function HomePage() {
                         height={600}
                         priority
                         unoptimized
-                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                        className="h-full w-full object-cover transition-transform duration-700 ease-out hover:scale-[1.03]"
                       />
                     </div>
                   </div>
@@ -48,49 +49,57 @@ export default async function HomePage() {
 
                 {/* Details column */}
                 <div className="lg:col-span-7">
+                  {/* Curator Eyebrow with film-specific accent dot */}
                   <div className="inline-flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#D21871]" />
-                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#D21871]">
-                      Pilihan Kurator Pekan Ini
+                    <span
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ backgroundColor: palette.accent }}
+                    />
+                    <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-reel">
+                      Kurasi Sinema Pekan Ini
                     </span>
                   </div>
 
-                  <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-ink sm:text-5xl md:text-6xl lg:text-7xl break-words">
+                  {/* Title: Fraunces editorial serif */}
+                  <h1 className="mt-2.5 font-display text-4xl font-extrabold tracking-tight text-ink sm:text-5xl md:text-6xl lg:text-7xl break-words leading-[1.05]">
                     {featuredFilm.title}
                   </h1>
 
                   {featuredFilm.originalTitle && (
-                    <p className="mt-1 text-base sm:text-lg italic text-reel">
+                    <p className="mt-1.5 font-display text-base sm:text-lg italic text-reel">
                       {featuredFilm.originalTitle} ({featuredFilm.releaseYear})
                     </p>
                   )}
 
-                  <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-2 text-xs font-mono">
-                    <span className="border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2.5 py-1 font-semibold text-[#1277B0]">
+                  {/* Badges: Monochrome 1px border boxes, uniform text */}
+                  <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-2 text-xs font-mono text-ink/75 dark:text-ink/80">
+                    <span className="border border-line bg-transparent px-2.5 py-1 tracking-tight">
                       {featuredFilm.genre}
                     </span>
-                    <span className="border border-[#F49924]/30 bg-[#F49924]/10 px-2.5 py-1 font-semibold text-[#A6610A]">
+                    <span className="border border-line bg-transparent px-2.5 py-1 tracking-tight">
                       {featuredFilm.durationMinutes} Menit
                     </span>
-                    <span className="border border-[#D21871]/30 bg-[#D21871]/10 px-2.5 py-1 font-semibold text-[#D21871]">
+                    <span className="border border-line bg-transparent px-2.5 py-1 tracking-tight">
                       Klasifikasi {featuredFilm.rating}
                     </span>
-                    <span className="border border-line bg-white px-2.5 py-1 text-reel">
+                    <span className="border border-line bg-transparent px-2.5 py-1 text-reel tracking-tight">
                       Sutradara: {featuredFilm.director}
                     </span>
                   </div>
 
-                  <p className="mt-5 sm:mt-6 max-w-xl text-sm sm:text-base leading-relaxed text-ink/80">
+                  {/* Synopsis: Public Sans body text */}
+                  <p className="mt-5 sm:mt-6 max-w-xl text-sm sm:text-base leading-relaxed text-ink/85 font-sans">
                     {featuredFilm.synopsis}
                   </p>
 
-                  <div className="mt-6 sm:mt-8 border-t border-line/60 pt-6">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                  {/* Showtimes: Ticket-stub cards with vertical accent bar & monospace time */}
+                  <div className="mt-6 sm:mt-8 border-t border-line pt-6">
+                    <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
                       <span className="text-xs font-mono uppercase tracking-wider text-reel">
                         Jadwal Pemutaran Hari Ini
                       </span>
-                      <span className="text-xs font-mono font-medium text-[#1D99DE]">
-                        Pilih jam untuk pesan
+                      <span className="text-[11px] font-mono text-reel">
+                        Pilih jam pemutaran untuk memilih kursi
                       </span>
                     </div>
 
@@ -105,34 +114,47 @@ export default async function HomePage() {
                             <Link
                               key={st.id}
                               href={`/book/${st.id}`}
-                              className="group flex flex-1 sm:flex-initial items-center justify-center gap-2.5 sm:gap-3 border border-line bg-white px-4 py-2.5 text-sm text-ink shadow-sm transition-all hover:border-[#1D99DE] hover:bg-[#1D99DE] hover:text-white"
+                              className="group relative flex flex-1 sm:flex-initial items-center gap-3 rounded-xs border border-line bg-paper-card px-3.5 py-2.5 text-sm transition-all hover:border-ink/40 dark:hover:border-ink/60"
+                              style={{
+                                borderLeftWidth: "3px",
+                                borderLeftColor: palette.accent,
+                              }}
                             >
-                              <span className="font-mono font-bold">{timeStr}</span>
-                              <span className="text-xs text-reel group-hover:text-white/90">
+                              <span className="font-mono text-base font-bold tracking-tight text-ink">
+                                {timeStr}
+                              </span>
+                              <span className="border-l border-line/70 pl-2.5 font-mono text-[11px] uppercase tracking-wider text-reel group-hover:text-ink transition-colors">
                                 {st.auditorium}
                               </span>
                             </Link>
                           );
                         })
                       ) : (
-                        <p className="text-sm text-reel">
+                        <p className="text-sm font-mono text-reel">
                           Belum ada jadwal tayang hari ini.
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="mt-7 sm:mt-8 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5">
+                  {/* CTA & Price: Medium radius button with curated accent & terminal price */}
+                  <div className="mt-7 sm:mt-8 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
                     <Link
                       href={`/films/${featuredFilm.slug || featuredFilm.id}`}
-                      className="text-center bg-[#D21871] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#B4115F] hover:shadow-lg"
+                      className="inline-flex items-center justify-center rounded-md px-6 py-2.5 text-sm font-medium transition-opacity hover:opacity-90 shadow-xs"
+                      style={{
+                        backgroundColor: palette.accent,
+                        color: palette.accentText,
+                      }}
                     >
                       Detail Film & Sinopsis
                     </Link>
-                    <div className="flex items-center justify-center sm:justify-start gap-2 font-mono text-sm font-bold text-ink">
-                      <span className="h-2 w-2 rounded-full bg-[#F49924]" />
-                      <span>Rp {featuredFilm.price.toLocaleString("id-ID")}</span>
-                      <span className="text-xs font-normal text-reel">/ tiket</span>
+                    <div className="flex items-center justify-center sm:justify-start gap-2.5 font-mono text-ink">
+                      <span className="text-xs uppercase tracking-wider text-reel">Tarif</span>
+                      <span className="text-lg font-bold tracking-tight">
+                        Rp {featuredFilm.price.toLocaleString("id-ID")}
+                      </span>
+                      <span className="text-xs font-normal text-reel">/ kursi</span>
                     </div>
                   </div>
                 </div>
@@ -149,16 +171,16 @@ export default async function HomePage() {
                 <h2 className="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl md:text-4xl">
                   Tayang Pekan Ini
                 </h2>
-                <p className="mt-1 text-xs sm:text-sm text-reel">
+                <p className="mt-1 font-sans text-xs sm:text-sm text-reel">
                   Program tayang reguler di Layar Utama dan Layar Studio
                 </p>
               </div>
 
               <Link
                 href="/films"
-                className="text-xs sm:text-sm font-semibold text-[#1D99DE] transition-colors hover:text-[#0F6696] hover:underline"
+                className="font-mono text-xs sm:text-sm text-ink hover:text-reel transition-colors underline underline-offset-4"
               >
-                Lihat Semua Film →
+                Lihat Semua Film
               </Link>
             </div>
 
@@ -166,52 +188,52 @@ export default async function HomePage() {
               {nowShowing.map((film) => (
                 <article
                   key={film.id}
-                  className="flex flex-col border border-line bg-white p-4 shadow-warm transition-shadow hover:shadow-warm-lg"
+                  className="flex flex-col border border-line bg-paper-card p-3 sm:p-4 shadow-[3px_3px_0px_0px_rgba(18,17,16,0.08)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,0.5)] transition-transform duration-200 hover:-translate-y-0.5"
                 >
-                  <div className="aspect-[3/4] w-full overflow-hidden bg-ink">
+                  <div className="aspect-[3/4] w-full overflow-hidden bg-ink rounded-none border border-line/60">
                     <Image
                       src={film.posterUrl}
                       alt={film.title}
                       width={360}
                       height={480}
                       unoptimized
-                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out hover:scale-105"
                     />
                   </div>
 
                   <div className="mt-4 flex flex-1 flex-col justify-between">
                     <div>
-                      <div className="flex items-center justify-between text-xs font-mono">
-                        <span className="border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2 py-0.5 font-semibold text-[#1277B0]">
+                      <div className="flex items-center justify-between text-xs font-mono text-ink/75">
+                        <span className="border border-line bg-transparent px-2 py-0.5 tracking-tight">
                           {film.category === "DOCUMENTARY"
                             ? "Dokumenter"
                             : film.category === "SHORT"
                             ? "Film Pendek"
                             : "Film Panjang"}
                         </span>
-                        <span className="text-reel font-semibold">{film.durationMinutes} Min</span>
+                        <span className="text-reel font-mono">{film.durationMinutes} Min</span>
                       </div>
 
                       <h3 className="mt-2.5 font-display text-xl sm:text-2xl font-bold text-ink">
-                        <Link href={`/films/${film.slug || film.id}`} className="hover:text-[#1D99DE]">
+                        <Link href={`/films/${film.slug || film.id}`} className="hover:opacity-80 transition-opacity">
                           {film.title}
                         </Link>
                       </h3>
 
-                      <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-reel">
+                      <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-reel font-sans">
                         {film.synopsis}
                       </p>
                     </div>
 
-                    <div className="mt-6 flex items-center justify-between border-t border-line pt-4">
-                      <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-ink">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#F49924]" />
+                    <div className="mt-6 flex items-center justify-between border-t border-line pt-3.5">
+                      <div className="font-mono text-xs font-bold text-ink">
                         <span>Rp {film.price.toLocaleString("id-ID")}</span>
+                        <span className="text-[10px] text-reel font-normal font-sans ml-1">/ tiket</span>
                       </div>
 
                       <Link
                         href={`/films/${film.slug || film.id}`}
-                        className="border border-[#1D99DE] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#1D99DE] shadow-sm transition-all hover:bg-[#1D99DE] hover:text-white"
+                        className="rounded-md border border-line bg-paper px-3 py-1.5 font-mono text-xs font-medium text-ink transition-colors hover:border-ink hover:bg-ink hover:text-paper"
                       >
                         Jadwal & Tiket
                       </Link>
@@ -231,7 +253,7 @@ export default async function HomePage() {
                 <h2 className="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl md:text-4xl">
                   Segera Hadir
                 </h2>
-                <p className="mt-1 text-xs sm:text-sm text-reel">
+                <p className="mt-1 font-sans text-xs sm:text-sm text-reel">
                   Program khusus dan rilisan terbatas bulan depan
                 </p>
               </div>
@@ -240,31 +262,33 @@ export default async function HomePage() {
                 {comingSoon.map((film) => (
                   <div
                     key={film.id}
-                    className="flex flex-col sm:flex-row gap-5 sm:gap-6 border border-line bg-white p-5 sm:p-6 shadow-warm"
+                    className="flex flex-col sm:flex-row gap-5 sm:gap-6 border border-line bg-paper-card p-4 sm:p-5 shadow-[3px_3px_0px_0px_rgba(18,17,16,0.08)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,0.5)]"
                   >
-                    <div className="aspect-[2/3] w-36 sm:w-40 flex-shrink-0 overflow-hidden bg-ink mx-auto sm:mx-0">
+                    <div className="aspect-[2/3] w-32 sm:w-36 flex-shrink-0 overflow-hidden bg-ink rounded-none border border-line/60 mx-auto sm:mx-0">
                       <Image
                         src={film.posterUrl}
                         alt={film.title}
                         width={160}
                         height={240}
                         unoptimized
-                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                        className="h-full w-full object-cover transition-transform duration-700 ease-out hover:scale-105"
                       />
                     </div>
-                    <div className="flex-1">
-                      <span className="border border-[#F49924]/30 bg-[#F49924]/10 px-2 py-0.5 text-xs font-mono font-semibold text-[#A6610A]">
-                        Rilisan Mendatang
-                      </span>
-                      <h3 className="mt-2.5 font-display text-xl sm:text-2xl font-bold text-ink">
-                        {film.title}
-                      </h3>
-                      <p className="mt-1 font-mono text-xs text-reel">
-                        Sutradara: {film.director}
-                      </p>
-                      <p className="mt-3 text-sm leading-relaxed text-reel">
-                        {film.synopsis}
-                      </p>
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div>
+                        <span className="border border-line bg-transparent px-2 py-0.5 text-[11px] font-mono text-reel uppercase tracking-tight">
+                          Rilisan Mendatang
+                        </span>
+                        <h3 className="mt-2 font-display text-xl sm:text-2xl font-bold text-ink">
+                          {film.title}
+                        </h3>
+                        <p className="mt-1 font-mono text-xs text-reel">
+                          Sutradara: {film.director}
+                        </p>
+                        <p className="mt-2.5 text-sm leading-relaxed text-reel font-sans">
+                          {film.synopsis}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ))}

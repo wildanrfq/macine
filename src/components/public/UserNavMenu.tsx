@@ -42,21 +42,21 @@ export default function UserNavMenu({ user }: UserNavMenuProps) {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 rounded-full border border-line bg-white py-1 pr-3 pl-1 shadow-sm transition-all hover:border-[#1D99DE]"
+        className="flex items-center gap-2 rounded-full border border-line bg-paper-card py-1 pr-3 pl-1 shadow-xs transition-all hover:border-[#1D99DE] cursor-pointer"
       >
         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1D99DE] font-mono text-xs font-bold text-white">
           {initial}
         </span>
-        <span className="max-w-[120px] truncate text-xs font-semibold text-ink">
+        <span className="max-w-[120px] truncate text-xs font-medium text-ink">
           {user.name.split(" ")[0]}
         </span>
-        <span className="text-[10px] text-reel">▼</span>
+        <span className="text-[9px] text-reel">▼</span>
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 border border-line bg-white p-2 shadow-warm-lg z-50">
+        <div className="absolute right-0 mt-2 w-56 border border-line bg-paper-card p-2 shadow-[3px_3px_0px_0px_rgba(18,17,16,0.08)] z-50">
           <div className="border-b border-line px-3 py-2">
-            <p className="truncate text-xs font-bold text-ink">{user.name}</p>
+            <p className="truncate text-xs font-medium text-ink">{user.name}</p>
             <p className="truncate font-mono text-[10px] text-reel">{user.email}</p>
           </div>
 
@@ -64,7 +64,7 @@ export default function UserNavMenu({ user }: UserNavMenuProps) {
             <Link
               href="/dashboard"
               onClick={() => setIsOpen(false)}
-              className="flex items-center justify-between px-3 py-2 text-xs font-medium text-ink hover:bg-[#FAF8F5] hover:text-[#D21871]"
+              className="flex items-center justify-between px-3 py-2 text-xs font-medium text-ink hover:bg-paper hover:text-[#D21871]"
             >
               <span>Tiket & Riwayat Saya</span>
               <span className="h-1.5 w-1.5 rounded-full bg-[#D21871]" />
@@ -75,7 +75,7 @@ export default function UserNavMenu({ user }: UserNavMenuProps) {
             <button
               type="button"
               onClick={handleLogout}
-              className="w-full px-3 py-2 text-left font-mono text-xs text-reel hover:bg-[#FAF8F5] hover:text-[#D21871]"
+              className="w-full px-3 py-2 text-left font-mono text-xs text-reel hover:bg-paper hover:text-[#D21871] cursor-pointer"
             >
               Keluar (Logout)
             </button>

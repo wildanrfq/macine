@@ -51,20 +51,20 @@ function RegisterForm() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-md border border-line bg-white p-8 shadow-warm-lg">
-      <div className="border-b border-line pb-4 text-center">
-        <div className="flex items-center justify-center gap-1.5 mb-2">
+    <div className="mx-auto w-full max-w-md border border-line bg-paper-card p-6 sm:p-8 shadow-[3px_3px_0px_0px_rgba(18,17,16,0.08)]">
+      <div className="border-b border-line pb-5 text-center">
+        <div className="flex items-center justify-center gap-1.5 mb-2.5">
           <span className="h-2 w-2 rounded-full bg-[#1D99DE]" />
           <span className="h-2 w-2 rounded-full bg-[#F49924]" />
           <span className="h-2 w-2 rounded-full bg-[#D21871]" />
         </div>
-        <span className="font-mono text-[11px] uppercase tracking-wider text-reel">
+        <span className="inline-block border border-line bg-paper px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-reel">
           Registrasi Penonton
         </span>
-        <h1 className="mt-1 font-display text-3xl font-bold tracking-tight text-ink">
+        <h1 className="mt-3 font-serif text-2xl sm:text-3xl font-medium tracking-tight text-ink">
           Buat Akun Baru
         </h1>
-        <p className="mt-1 text-xs text-reel">
+        <p className="mt-1.5 text-xs text-reel">
           Simpan tiket, riwayat pesanan, dan nikmati pemesanan lebih cepat
         </p>
       </div>
@@ -73,7 +73,7 @@ function RegisterForm() {
       <div className="mt-6">
         <a
           href="/api/auth/google"
-          className="flex w-full items-center justify-center gap-3 border border-line bg-paper px-4 py-2.5 text-xs font-semibold text-ink shadow-sm transition-all hover:border-[#1D99DE] hover:shadow"
+          className="flex w-full items-center justify-center gap-3 border border-line bg-paper px-4 py-2.5 rounded-md font-mono text-xs font-medium text-ink transition-all hover:border-[#1D99DE]"
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24">
             <path
@@ -101,7 +101,7 @@ function RegisterForm() {
             <span className="w-full border-t border-line" />
           </div>
           <div className="relative flex justify-center text-[11px] uppercase">
-            <span className="bg-white px-2 font-mono text-reel">
+            <span className="bg-paper-card px-2 font-mono text-reel">
               atau isi data manual
             </span>
           </div>
@@ -109,7 +109,7 @@ function RegisterForm() {
       </div>
 
       {errorMessage && (
-        <div className="mt-4 border border-[#D21871]/30 bg-[#D21871]/10 p-3 text-xs font-mono text-[#D21871]">
+        <div className="mt-4 border border-[#D21871]/40 bg-[#D21871]/10 p-3 text-xs font-mono text-[#D21871]">
           {errorMessage}
         </div>
       )}
@@ -125,7 +125,7 @@ function RegisterForm() {
             placeholder="Contoh: Raden Arya"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="mt-1 w-full border border-line bg-[#FAF8F5] px-3.5 py-2.5 text-sm text-ink focus:border-[#1D99DE] focus:bg-white focus:outline-none"
+            className="mt-1 w-full border border-line bg-paper px-3.5 py-2.5 font-mono text-xs text-ink placeholder:text-reel/50 focus:border-[#1D99DE] focus:outline-none rounded-xs"
           />
         </div>
 
@@ -139,7 +139,7 @@ function RegisterForm() {
             placeholder="nama@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 w-full border border-line bg-[#FAF8F5] px-3.5 py-2.5 text-sm text-ink focus:border-[#1D99DE] focus:bg-white focus:outline-none"
+            className="mt-1 w-full border border-line bg-paper px-3.5 py-2.5 font-mono text-xs text-ink placeholder:text-reel/50 focus:border-[#1D99DE] focus:outline-none rounded-xs"
           />
         </div>
 
@@ -152,7 +152,7 @@ function RegisterForm() {
             placeholder="08123456789"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="mt-1 w-full border border-line bg-[#FAF8F5] px-3.5 py-2.5 text-sm text-ink focus:border-[#1D99DE] focus:bg-white focus:outline-none"
+            className="mt-1 w-full border border-line bg-paper px-3.5 py-2.5 font-mono text-xs text-ink placeholder:text-reel/50 focus:border-[#1D99DE] focus:outline-none rounded-xs"
           />
         </div>
 
@@ -167,7 +167,7 @@ function RegisterForm() {
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 w-full border border-line bg-[#FAF8F5] px-3.5 py-2.5 text-sm text-ink focus:border-[#1D99DE] focus:bg-white focus:outline-none"
+            className="mt-1 w-full border border-line bg-paper px-3.5 py-2.5 font-mono text-xs text-ink placeholder:text-reel/50 focus:border-[#1D99DE] focus:outline-none rounded-xs"
           />
         </div>
 
@@ -175,7 +175,7 @@ function RegisterForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-[#D21871] py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#B4115F] disabled:opacity-50"
+            className="w-full bg-[#D21871] py-3 rounded-md font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-xs transition-all hover:bg-[#B4115F] disabled:opacity-50 cursor-pointer"
           >
             {isLoading ? "Mendaftarkan..." : "Daftar Akun Sekarang"}
           </button>

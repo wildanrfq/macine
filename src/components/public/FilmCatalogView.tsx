@@ -4,6 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FilmWithShowtimes } from "@/lib/films";
+import { getFilmPalette } from "@/lib/film-palettes";
 
 interface FilmCatalogViewProps {
   initialFilms: FilmWithShowtimes[];
@@ -62,15 +63,15 @@ export default function FilmCatalogView({
       {/* Header */}
       <div className="border-b border-line pb-6">
         <div className="inline-flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#1D99DE]" />
-          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1D99DE]">
+          <span className="h-1.5 w-1.5 rounded-full bg-ink" />
+          <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-reel">
             Kurasi Sinema
           </span>
         </div>
         <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-ink sm:text-5xl">
           Katalog Film & Jadwal
         </h1>
-        <p className="mt-2 max-w-2xl text-xs sm:text-sm text-reel">
+        <p className="mt-2 max-w-2xl text-xs sm:text-sm text-reel font-sans">
           Pilihan sinema independen dari film panjang, film dokumenter bersejarah, hingga film pendek terbaik. Diputar intim di auditorium berkapasitas 20–24 kursi.
         </p>
 
@@ -85,25 +86,25 @@ export default function FilmCatalogView({
                 key={cat.key}
                 type="button"
                 onClick={() => handleSelectCategory(cat.key)}
-                className={`group flex flex-shrink-0 items-center gap-2 border px-3.5 sm:px-4 py-2 font-mono text-xs font-semibold whitespace-nowrap cursor-pointer transition-all duration-150 active:scale-[0.98] ${
+                className={`group flex flex-shrink-0 items-center gap-2 rounded-xs border px-3.5 sm:px-4 py-2 font-mono text-xs font-medium whitespace-nowrap cursor-pointer transition-all duration-150 active:scale-[0.98] ${
                   isActive
-                    ? "border-[#D21871] bg-[#D21871] text-white shadow-sm"
-                    : "border-line bg-white text-ink hover:border-[#1D99DE] hover:text-[#1D99DE]"
+                    ? "border-ink bg-ink text-paper shadow-xs"
+                    : "border-line bg-paper-card text-ink hover:border-ink/50"
                 }`}
               >
                 <span>{cat.label}</span>
                 <span
                   className={`text-[10px] hidden sm:inline ${
-                    isActive ? "text-white/80" : "text-reel group-hover:text-[#1D99DE]"
+                    isActive ? "text-paper/70" : "text-reel group-hover:text-ink"
                   }`}
                 >
                   ({cat.desc})
                 </span>
                 <span
-                  className={`ml-0.5 rounded-full px-1.5 py-0.2 text-[10px] font-mono font-bold ${
+                  className={`ml-0.5 rounded-xs px-1.5 py-0.2 text-[10px] font-mono font-bold ${
                     isActive
-                      ? "bg-white/20 text-white"
-                      : "bg-paper-warm text-reel group-hover:bg-[#1D99DE]/10 group-hover:text-[#1D99DE]"
+                      ? "bg-paper/20 text-paper"
+                      : "bg-paper-warm text-reel group-hover:text-ink"
                   }`}
                 >
                   {count}
@@ -121,7 +122,7 @@ export default function FilmCatalogView({
             <h2 className="font-display text-2xl font-bold text-ink">
               Sedang Tayang
             </h2>
-            <span className="font-mono text-xs font-semibold text-[#F49924]">
+            <span className="font-mono text-xs text-reel">
               ({nowShowing.length} Judul)
             </span>
           </div>
@@ -129,7 +130,7 @@ export default function FilmCatalogView({
             <button
               type="button"
               onClick={() => handleSelectCategory("ALL")}
-              className="font-mono text-xs text-reel hover:text-[#1D99DE] cursor-pointer transition-colors"
+              className="font-mono text-xs text-reel hover:text-ink underline underline-offset-4 cursor-pointer transition-colors"
             >
               Reset Filter
             </button>
@@ -137,16 +138,16 @@ export default function FilmCatalogView({
         </div>
 
         {nowShowing.length === 0 ? (
-          <div className="mt-8 border border-dashed border-line bg-white p-10 sm:p-12 text-center shadow-warm">
-            <p className="text-sm text-reel">
+          <div className="mt-8 border border-dashed border-line bg-paper-card p-10 sm:p-12 text-center shadow-[2px_2px_0px_0px_rgba(18,17,16,0.06)]">
+            <p className="text-sm font-mono text-reel">
               Belum ada film yang sedang tayang untuk kategori ini.
             </p>
             <button
               type="button"
               onClick={() => handleSelectCategory("ALL")}
-              className="mt-4 inline-block font-mono text-xs font-semibold text-[#1D99DE] hover:underline cursor-pointer"
+              className="mt-4 inline-block font-mono text-xs font-semibold text-ink underline underline-offset-4 hover:text-reel cursor-pointer"
             >
-              Lihat Semua Program Film →
+              Lihat Semua Program Film
             </button>
           </div>
         ) : (
@@ -155,6 +156,7 @@ export default function FilmCatalogView({
             className="animate-film-fade-in mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
           >
             {nowShowing.map((film) => {
+              const palette = getFilmPalette(film.slug || film.id);
               const programLabel =
                 film.category === "DOCUMENTARY"
                   ? "Rekam Jejak"
@@ -165,9 +167,9 @@ export default function FilmCatalogView({
               return (
                 <article
                   key={film.id}
-                  className="flex flex-col border border-line bg-white shadow-warm transition-all duration-200 hover:shadow-warm-lg"
+                  className="flex flex-col border border-line bg-paper-card p-3 sm:p-4 shadow-[3px_3px_0px_0px_rgba(18,17,16,0.08)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,0.5)] transition-transform duration-200 hover:-translate-y-0.5"
                 >
-                  <div className="relative aspect-[2/3] w-full overflow-hidden bg-ink">
+                  <div className="relative aspect-[2/3] w-full overflow-hidden bg-ink rounded-none border border-line/60">
                     <Image
                       src={film.posterUrl}
                       alt={film.title}
@@ -175,63 +177,67 @@ export default function FilmCatalogView({
                       height={540}
                       unoptimized
                       loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out hover:scale-105"
                     />
                   </div>
 
-                  <div className="flex flex-1 flex-col justify-between p-4 sm:p-6">
+                  <div className="flex flex-1 flex-col justify-between pt-4">
                     <div>
-                      <div className="flex items-center justify-between text-xs font-mono">
-                        <span className="border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2 py-0.5 font-semibold text-[#1277B0]">
+                      <div className="flex items-center justify-between text-xs font-mono text-ink/75">
+                        <span className="border border-line bg-transparent px-2 py-0.5 tracking-tight">
                           {programLabel} Vol. {film.programVol}
                         </span>
-                        <span className="text-reel font-semibold">{film.durationMinutes} Menit</span>
+                        <span className="text-reel font-mono">{film.durationMinutes} Menit</span>
                       </div>
 
-                      <h3 className="mt-3 font-display text-2xl font-bold text-ink sm:text-3xl">
+                      <h3 className="mt-3 font-display text-2xl font-bold text-ink">
                         <Link
                           href={`/films/${film.slug}`}
-                          className="transition-colors hover:text-[#1D99DE]"
+                          className="hover:opacity-80 transition-opacity"
                         >
                           {film.title}
                         </Link>
                       </h3>
 
                       {film.originalTitle && (
-                        <p className="text-xs italic text-reel">
+                        <p className="mt-0.5 font-display text-xs italic text-reel">
                           {film.originalTitle} ({film.releaseYear})
                         </p>
                       )}
 
-                      <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-reel">
+                      <p className="mt-2.5 line-clamp-3 text-sm leading-relaxed text-reel font-sans">
                         {film.synopsis}
                       </p>
                     </div>
 
-                    <div className="mt-6 border-t border-line pt-4">
-                      <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div className="mt-6 border-t border-line pt-3.5">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
                         <div>
-                          <span className="block font-mono text-xs text-reel">
-                            Tiket Masuk
+                          <span className="block font-mono text-[11px] text-reel uppercase tracking-wider">
+                            Tarif
                           </span>
-                          <div className="flex items-center gap-1.5 font-mono text-sm font-bold text-ink">
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#F49924]" />
+                          <div className="font-mono text-sm font-bold text-ink">
                             <span>Rp {film.price.toLocaleString("id-ID")}</span>
+                            <span className="text-[10px] text-reel font-normal font-sans ml-1">/ kursi</span>
                           </div>
                         </div>
 
                         <div className="flex items-center gap-2">
                           <Link
                             href={`/films/${film.slug}`}
-                            className="border border-line bg-white px-3.5 py-1.5 text-xs font-medium text-ink transition-colors hover:border-[#1D99DE] hover:text-[#1D99DE]"
+                            className="rounded-md border border-line bg-paper px-3 py-1.5 font-mono text-xs font-medium text-ink transition-colors hover:border-ink hover:text-ink"
                           >
-                            Detail Film
+                            Detail
                           </Link>
 
                           {film.showtimes.length > 0 && (
                             <Link
                               href={`/book/${film.showtimes[0].id}`}
-                              className="bg-[#D21871] px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-white shadow-sm transition-all hover:bg-[#B4115F]"
+                              className="rounded-md px-3.5 py-1.5 font-mono text-xs font-medium transition-opacity hover:opacity-90 shadow-xs"
+                              style={{
+                                backgroundColor: palette.accent,
+                                color: palette.accentText,
+                              }}
                             >
                               Pesan Tiket
                             </Link>
@@ -241,15 +247,15 @@ export default function FilmCatalogView({
 
                       {/* Showtimes badges */}
                       {film.showtimes.length > 0 && (
-                        <div className="mt-4 flex flex-wrap items-center gap-2">
-                          <span className="font-mono text-xs text-reel">
+                        <div className="mt-3.5 flex flex-wrap items-center gap-2 border-t border-line/60 pt-2.5">
+                          <span className="font-mono text-[11px] text-reel uppercase tracking-wider">
                             Jadwal:
                           </span>
                           {film.showtimes.map((st) => (
                             <Link
                               key={st.id}
                               href={`/book/${st.id}`}
-                              className="border border-line bg-[#FAF8F5] px-2.5 py-0.5 font-mono text-xs font-semibold text-ink transition-colors hover:border-[#1D99DE] hover:bg-[#1D99DE] hover:text-white"
+                              className="rounded-xs border border-line bg-paper px-2 py-0.5 font-mono text-xs font-semibold text-ink transition-colors hover:border-ink hover:bg-ink hover:text-paper"
                             >
                               {new Date(st.startTime).toLocaleTimeString(
                                 "id-ID",
@@ -278,7 +284,7 @@ export default function FilmCatalogView({
             <h2 className="font-display text-2xl font-bold text-ink">
               Segera Hadir
             </h2>
-            <p className="mt-1 text-xs text-reel">
+            <p className="mt-1 font-sans text-xs text-reel">
               Rilisan eksklusif dan film retrospektif mendatang ({comingSoon.length} Judul)
             </p>
           </div>
@@ -290,9 +296,9 @@ export default function FilmCatalogView({
             {comingSoon.map((film) => (
               <article
                 key={film.id}
-                className="border border-line bg-white p-5 shadow-warm"
+                className="border border-line bg-paper-card p-4 shadow-[3px_3px_0px_0px_rgba(18,17,16,0.08)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,0.5)]"
               >
-                <div className="aspect-[2/3] w-full overflow-hidden bg-ink">
+                <div className="aspect-[2/3] w-full overflow-hidden bg-ink rounded-none border border-line/60">
                   <Image
                     src={film.posterUrl}
                     alt={film.title}
@@ -300,22 +306,22 @@ export default function FilmCatalogView({
                     height={540}
                     unoptimized
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out hover:scale-105"
                   />
                 </div>
                 <div className="mt-4">
-                  <span className="border border-[#F49924]/30 bg-[#F49924]/10 px-2 py-0.5 font-mono text-xs font-semibold text-[#A6610A]">
+                  <span className="border border-line bg-transparent px-2 py-0.5 font-mono text-[11px] text-reel uppercase tracking-tight">
                     {film.genre}
                   </span>
-                  <h3 className="mt-2.5 font-display text-xl font-bold text-ink">
-                    <Link href={`/films/${film.slug}`} className="hover:text-[#1D99DE]">
+                  <h3 className="mt-2 font-display text-xl font-bold text-ink">
+                    <Link href={`/films/${film.slug}`} className="hover:opacity-80 transition-opacity">
                       {film.title}
                     </Link>
                   </h3>
                   <p className="mt-1 font-mono text-xs text-reel">
                     Sutradara: {film.director}
                   </p>
-                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-reel">
+                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-reel font-sans">
                     {film.synopsis}
                   </p>
                 </div>

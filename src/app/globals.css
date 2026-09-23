@@ -13,13 +13,6 @@
   --brand-blue: #1D99DE;
   --brand-orange: #F49924;
   --brand-magenta: #D21871;
-
-  /* Ambient cinematic gradient for daytime (Warm Paper + Soft Cinema Glow) */
-  --ambient-bg:
-    radial-gradient(ellipse 90% 55% at 10% -5%, rgba(29, 153, 222, 0.055) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 50% at 90% 15%, rgba(244, 153, 36, 0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 75% 55% at 50% 90%, rgba(210, 24, 113, 0.035) 0%, transparent 65%),
-    linear-gradient(180deg, #FAF8F5 0%, #F5F1EA 50%, #FAF8F5 100%);
 }
 
 .dark {
@@ -31,13 +24,6 @@
   --reel-grey: #A6A097;
   --line: #2E2B28;
   --spotlight: #242220;
-
-  /* Ambient cinematic gradient for night (Velvet Ink Auditorium + Projector Glow) */
-  --ambient-bg:
-    radial-gradient(ellipse 90% 55% at 15% -5%, rgba(29, 153, 222, 0.09) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 50% at 85% 20%, rgba(244, 153, 36, 0.075) 0%, transparent 60%),
-    radial-gradient(ellipse 75% 60% at 50% 85%, rgba(210, 24, 113, 0.07) 0%, transparent 65%),
-    linear-gradient(180deg, #121110 0%, #161514 50%, #0E0D0C 100%);
 }
 
 @theme {
@@ -54,24 +40,24 @@
   --color-brand-orange: #F49924;
   --color-brand-magenta: #D21871;
 
-  --font-display: var(--font-display), "Cormorant Garamond", Georgia, serif;
-  --font-body: var(--font-body), "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: var(--font-display), "Fraunces", Georgia, serif;
+  --font-serif: var(--font-display), "Fraunces", Georgia, serif;
+  --font-body: var(--font-body), "Public Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: var(--font-mono), "JetBrains Mono", monospace;
 }
 
 body {
-  background: var(--ambient-bg);
-  background-size: 100% 100%;
+  background-color: var(--paper);
   color: var(--ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
-  transition: color 0.25s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Allow the ambient body gradient to show through full-height page wrappers */
-div.bg-paper {
-  background-color: transparent !important;
+.film-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
 }
 
 /* Translucent frosted glass effect for Navbar */

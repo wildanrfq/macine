@@ -3,12 +3,12 @@ import Link from "next/link";
 export default function AdminLoginPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-paper px-6 py-12 text-ink">
-      <div className="w-full max-w-sm border border-line bg-paper p-8 shadow-sm">
+      <div className="w-full max-w-sm border border-line bg-paper-card p-8 shadow-[3px_3px_0px_0px_rgba(18,17,16,0.08)]">
         <div className="border-b border-line pb-4 text-center">
           <span className="font-mono text-[10px] uppercase tracking-widest text-reel">
             Akses Terbatas
           </span>
-          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-ink">
+          <h1 className="mt-2 font-serif text-2xl font-medium tracking-tight text-ink">
             Backstage Bioskop
           </h1>
           <p className="mt-1 text-xs text-reel">
@@ -26,7 +26,7 @@ export default function AdminLoginPage() {
               required
               defaultValue="kurator@bioskopmini.id"
               placeholder="kurator@bioskopmini.id"
-              className="mt-1 w-full border border-line bg-paper px-3 py-2 text-sm text-ink focus:border-ink focus:outline-none"
+              className="mt-1 w-full border border-line bg-paper px-3 py-2 font-mono text-xs text-ink focus:border-ink focus:outline-none rounded-xs"
             />
           </div>
 
@@ -38,14 +38,14 @@ export default function AdminLoginPage() {
               type="password"
               required
               placeholder="••••••••"
-              className="mt-1 w-full border border-line bg-paper px-3 py-2 text-sm text-ink focus:border-ink focus:outline-none"
+              className="mt-1 w-full border border-line bg-paper px-3 py-2 font-mono text-xs text-ink focus:border-ink focus:outline-none rounded-xs"
             />
           </div>
 
           <div className="pt-2">
             <Link
               href="/admin"
-              className="flex w-full items-center justify-center border border-ink bg-ink py-2 text-xs font-semibold uppercase tracking-wider text-paper hover:bg-transparent hover:text-ink"
+              className="flex w-full items-center justify-center border border-ink bg-ink py-2.5 rounded-md font-mono text-xs font-medium uppercase tracking-wider text-paper hover:bg-ink/85 shadow-xs"
             >
               Masuk Panel
             </Link>

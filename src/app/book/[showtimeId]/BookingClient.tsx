@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import QrCodeVisual from "@/components/ui/QrCodeVisual";
+import { getFilmPalette } from "@/lib/film-palettes";
 
 interface BookingClientProps {
   showtime: {
@@ -14,6 +15,7 @@ interface BookingClientProps {
     price: number;
     film: {
       id: string;
+      slug?: string;
       title: string;
       posterUrl: string;
       durationMinutes: number;
@@ -50,6 +52,7 @@ export default function BookingClient({
   remainingTickets,
   initialUser,
 }: BookingClientProps) {
+  const palette = getFilmPalette(showtime.film.slug || showtime.film.id);
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [ticketCount, setTicketCount] = useState<number>(1);
   const [customerName, setCustomerName] = useState(initialUser?.name || "");
@@ -218,7 +221,7 @@ export default function BookingClient({
         {/* Mobile Step Indicator */}
         <div className="sm:hidden border-b border-line pb-4">
           <div className="flex items-center justify-between text-xs font-mono">
-            <span className="font-bold text-[#D21871]">
+            <span className="font-bold text-ink">
               Langkah 0{step} / 04
             </span>
             <span className="text-reel">
@@ -235,8 +238,8 @@ export default function BookingClient({
             {[1, 2, 3, 4].map((s) => (
               <div
                 key={s}
-                className={`h-1.5 rounded-full transition-colors ${
-                  s <= step ? "bg-[#D21871]" : "bg-line"
+                className={`h-1 transition-colors ${
+                  s <= step ? "bg-ink" : "bg-line"
                 }`}
               />
             ))}
@@ -245,74 +248,37 @@ export default function BookingClient({
 
         {/* Desktop Step Indicator */}
         <div className="hidden sm:flex border-b border-line pb-4 text-xs font-mono">
-          <div
-            className={`flex items-center gap-2 pr-6 ${
-              step === 1 ? "font-bold text-[#D21871]" : "text-reel"
-            }`}
-          >
-            <span
-              className={`px-1.5 py-0.5 ${
-                step === 1
-                  ? "border border-[#D21871] bg-[#D21871]/10 text-[#D21871]"
-                  : "border border-line text-reel"
-              }`}
-            >
-              01
-            </span>
-            <span>Jumlah Tiket</span>
-          </div>
-          <div
-            className={`flex items-center gap-2 px-6 border-l border-line ${
-              step === 2 ? "font-bold text-[#D21871]" : "text-reel"
-            }`}
-          >
-            <span
-              className={`px-1.5 py-0.5 ${
-                step === 2
-                  ? "border border-[#D21871] bg-[#D21871]/10 text-[#D21871]"
-                  : "border border-line text-reel"
-              }`}
-            >
-              02
-            </span>
-            <span>Data Pemesan</span>
-          </div>
-          <div
-            className={`flex items-center gap-2 px-6 border-l border-line ${
-              step === 3 ? "font-bold text-[#1D99DE]" : "text-reel"
-            }`}
-          >
-            <span
-              className={`px-1.5 py-0.5 ${
-                step === 3
-                  ? "border border-[#1D99DE] bg-[#1D99DE]/10 text-[#1D99DE]"
-                  : "border border-line text-reel"
-              }`}
-            >
-              03
-            </span>
-            <span>Bayar QRIS</span>
-          </div>
-          <div
-            className={`flex items-center gap-2 pl-6 border-l border-line ${
-              step === 4 ? "font-bold text-[#F49924]" : "text-reel"
-            }`}
-          >
-            <span
-              className={`px-1.5 py-0.5 ${
-                step === 4
-                  ? "border border-[#F49924] bg-[#F49924]/10 text-[#F49924]"
-                  : "border border-line text-reel"
-              }`}
-            >
-              04
-            </span>
-            <span>Tiket Digital</span>
-          </div>
+          {[
+            { num: 1, label: "Jumlah Tiket" },
+            { num: 2, label: "Data Pemesan" },
+            { num: 3, label: "Bayar QRIS" },
+            { num: 4, label: "Tiket Digital" },
+          ].map((item, idx) => {
+            const isActive = step === item.num;
+            return (
+              <div
+                key={item.num}
+                className={`flex items-center gap-2 ${idx > 0 ? "px-6 border-l border-line" : "pr-6"} ${
+                  isActive ? "font-bold text-ink" : "text-reel"
+                }`}
+              >
+                <span
+                  className={`px-1.5 py-0.5 rounded-none font-mono ${
+                    isActive
+                      ? "border border-ink bg-ink text-paper"
+                      : "border border-line text-reel"
+                  }`}
+                >
+                  0{item.num}
+                </span>
+                <span>{item.label}</span>
+              </div>
+            );
+          })}
         </div>
 
         {errorMessage && (
-          <div className="mt-6 border border-[#D21871]/30 bg-[#D21871]/10 p-4 text-xs font-mono text-[#D21871]">
+          <div className="mt-6 border border-line bg-paper-card p-4 text-xs font-mono text-ink">
             Perhatian: {errorMessage}
           </div>
         )}
@@ -322,7 +288,7 @@ export default function BookingClient({
           <div className="mt-6 sm:mt-8">
             <div className="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-line pb-4 gap-2">
               <div>
-                <h2 className="font-display text-2xl sm:text-3xl font-bold text-ink">
+                <h2 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-ink">
                   Tentukan Jumlah Tiket
                 </h2>
                 <p className="mt-1 text-xs text-reel">
@@ -345,34 +311,36 @@ export default function BookingClient({
 
             {remainingTickets > 0 ? (
               <div className="mt-6 sm:mt-8 space-y-6 sm:space-y-8">
-                <div className="border border-line bg-white p-5 sm:p-8 shadow-warm">
+                <div className="border border-line bg-paper-card p-5 sm:p-8 shadow-[3px_3px_0px_0px_rgba(18,17,16,0.08)]">
                   <div className="flex flex-col justify-between sm:flex-row sm:items-center gap-6">
                     <div>
-                      <span className="border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-2 py-0.5 font-mono text-xs font-semibold text-[#1277B0]">
+                      <span
+                        className="border px-2 py-0.5 font-mono text-[11px] uppercase tracking-wider font-semibold"
+                        style={{ borderColor: `${palette.accent}40`, backgroundColor: `${palette.accent}12`, color: palette.accent }}
+                      >
                         Tiket Masuk Reguler
                       </span>
-                      <h3 className="mt-2 font-display text-2xl font-bold text-ink">
+                      <h3 className="mt-3 font-serif text-2xl font-medium text-ink">
                         Akses Penuh Auditorium
                       </h3>
-                      <div className="mt-1 flex items-center gap-1.5 font-mono text-xs font-bold text-ink">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#F49924]" />
+                      <div className="mt-1 font-mono text-xs font-bold text-ink">
                         <span>Rp {showtime.price.toLocaleString("id-ID")}</span>
-                        <span className="font-normal text-reel">/ orang</span>
+                        <span className="font-normal text-reel font-sans ml-1">/ orang</span>
                       </div>
                     </div>
 
                     {/* Quantity Stepper */}
-                    <div className="flex items-center border border-line bg-[#FAF8F5]">
+                    <div className="flex items-center border border-line bg-paper">
                       <button
                         type="button"
                         disabled={ticketCount <= 1}
                         onClick={() => setTicketCount((prev) => Math.max(1, prev - 1))}
-                        className="flex h-12 w-12 items-center justify-center font-mono text-lg font-bold text-ink transition-colors hover:bg-[#1D99DE] hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink"
+                        className="flex h-12 w-12 items-center justify-center font-mono text-lg font-bold text-ink transition-colors hover:bg-ink hover:text-paper disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink cursor-pointer"
                       >
                         -
                       </button>
 
-                      <div className="flex h-12 w-16 items-center justify-center border-x border-line bg-white font-mono text-lg font-bold text-ink">
+                      <div className="flex h-12 w-16 items-center justify-center border-x border-line bg-paper-card font-mono text-lg font-bold text-ink">
                         {ticketCount}
                       </div>
 
@@ -382,7 +350,7 @@ export default function BookingClient({
                         onClick={() =>
                           setTicketCount((prev) => Math.min(maxAllowed, prev + 1))
                         }
-                        className="flex h-12 w-12 items-center justify-center font-mono text-lg font-bold text-ink transition-colors hover:bg-[#1D99DE] hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink"
+                        className="flex h-12 w-12 items-center justify-center font-mono text-lg font-bold text-ink transition-colors hover:bg-ink hover:text-paper disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink cursor-pointer"
                       >
                         +
                       </button>
@@ -391,17 +359,17 @@ export default function BookingClient({
 
                   {/* Preset quick buttons */}
                   <div className="mt-6 flex items-center gap-2 border-t border-line pt-4 text-xs font-mono text-reel">
-                    <span>Pilihan Cepat:</span>
+                    <span className="uppercase tracking-wider text-[11px]">Pilihan Cepat:</span>
                     {[1, 2, 3, 4].map((num) => (
                       <button
                         key={num}
                         type="button"
                         disabled={num > remainingTickets}
                         onClick={() => setTicketCount(num)}
-                        className={`border px-3 py-1 transition-colors ${
+                        className={`rounded-xs border px-3 py-1 font-mono text-xs transition-colors cursor-pointer ${
                           ticketCount === num
-                            ? "border-[#1D99DE] bg-[#1D99DE] text-white font-bold shadow-sm"
-                            : "border-line bg-white text-ink hover:border-[#1D99DE]"
+                            ? "border-ink bg-ink text-paper font-bold shadow-xs"
+                            : "border-line bg-paper-card text-ink hover:border-ink"
                         } disabled:opacity-30`}
                       >
                         {num} Tiket
@@ -411,14 +379,17 @@ export default function BookingClient({
                 </div>
 
                 {/* Free Seating Explanation Note */}
-                <div className="border border-[#F49924]/30 bg-[#F49924]/5 p-5">
+                <div className="border border-line bg-paper-card p-5 shadow-[2px_2px_0px_0px_rgba(18,17,16,0.06)]">
                   <div className="flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-[#F49924]" />
-                    <h4 className="font-mono text-xs font-bold uppercase text-[#A6610A]">
+                    <span
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ backgroundColor: palette.accent }}
+                    />
+                    <h4 className="font-mono text-xs font-semibold uppercase tracking-wider text-ink">
                       Ketentuan Tempat Duduk (Free-Seating)
                     </h4>
                   </div>
-                  <p className="mt-2 text-xs leading-relaxed text-reel">
+                  <p className="mt-2 text-xs leading-relaxed text-reel font-sans">
                     Auditorium kami berkapasitas 24 kursi dengan formasi berjarak
                     lapang. Setiap pemegang tiket bebas memilih tempat duduk
                     mana saja saat memasuki ruangan secara bergantian
@@ -431,21 +402,25 @@ export default function BookingClient({
                   <button
                     type="button"
                     onClick={() => setStep(2)}
-                    className="w-full sm:w-auto text-center bg-[#D21871] px-6 sm:px-8 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#B4115F] hover:shadow-lg"
+                    className="w-full sm:w-auto text-center rounded-md px-6 sm:px-8 py-2.5 font-mono text-xs font-medium uppercase tracking-wider shadow-xs transition-opacity hover:opacity-90 cursor-pointer"
+                    style={{
+                      backgroundColor: palette.accent,
+                      color: palette.accentText,
+                    }}
                   >
                     Lanjutkan ke Data Pemesan ({ticketCount} Tiket)
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="mt-8 border border-dashed border-line bg-white p-12 text-center shadow-warm">
-                <p className="text-sm text-reel">
+              <div className="mt-8 border border-dashed border-line bg-paper-card p-12 text-center shadow-[2px_2px_0px_0px_rgba(18,17,16,0.06)]">
+                <p className="text-sm font-mono text-reel">
                   Mohon maaf, tiket untuk sesi pemutaran ini telah habis
                   terjual.
                 </p>
                 <Link
                   href="/films"
-                  className="mt-4 inline-block bg-[#D21871] px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-[#B4115F]"
+                  className="mt-4 inline-block rounded-md px-4 py-2 font-mono text-xs font-medium text-paper bg-ink hover:opacity-90 shadow-xs"
                 >
                   Pilih Jadwal Lain
                 </Link>
@@ -457,7 +432,7 @@ export default function BookingClient({
         {/* STEP 2: Customer Information */}
         {step === 2 && (
           <div className="mt-8">
-            <h2 className="font-display text-2xl font-bold text-ink">
+            <h2 className="font-serif text-2xl font-medium tracking-tight text-ink">
               Data Pemesan Tiket
             </h2>
             <p className="mt-1 text-xs text-reel">
@@ -466,8 +441,8 @@ export default function BookingClient({
             </p>
 
             {initialUser && (
-              <div className="mt-4 flex items-center gap-2 border border-[#1D99DE]/30 bg-[#1D99DE]/10 px-3.5 py-2 text-xs text-[#1277B0]">
-                <span className="h-2 w-2 rounded-full bg-[#1D99DE]" />
+              <div className="mt-4 flex items-center gap-2 border border-line bg-paper-card px-3.5 py-2 text-xs font-mono text-ink/80">
+                <span className="h-1.5 w-1.5 rounded-full bg-ink" />
                 <span>
                   Kontak terisi otomatis dari akun <strong>{initialUser.name}</strong>. Tiket ini akan otomatis tersimpan di dashboard akun Anda.
                 </span>
@@ -488,7 +463,7 @@ export default function BookingClient({
                   placeholder="Contoh: Raden Arya"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  className="mt-1 w-full border border-line bg-white px-3.5 py-2.5 text-sm text-ink shadow-sm focus:border-[#1D99DE] focus:ring-1 focus:ring-[#1D99DE] focus:outline-none"
+                  className="mt-1 w-full rounded-xs border border-line bg-paper-card px-3.5 py-2.5 text-sm text-ink shadow-xs focus:border-ink focus:ring-1 focus:ring-ink focus:outline-none"
                 />
               </div>
 
@@ -502,7 +477,7 @@ export default function BookingClient({
                   placeholder="nama@email.com"
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
-                  className="mt-1 w-full border border-line bg-white px-3.5 py-2.5 text-sm text-ink shadow-sm focus:border-[#1D99DE] focus:ring-1 focus:ring-[#1D99DE] focus:outline-none"
+                  className="mt-1 w-full rounded-xs border border-line bg-paper-card px-3.5 py-2.5 text-sm text-ink shadow-xs focus:border-ink focus:ring-1 focus:ring-ink focus:outline-none"
                 />
               </div>
 
@@ -516,7 +491,7 @@ export default function BookingClient({
                   placeholder="08123456789"
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
-                  className="mt-1 w-full border border-line bg-white px-3.5 py-2.5 text-sm text-ink shadow-sm focus:border-[#1D99DE] focus:ring-1 focus:ring-[#1D99DE] focus:outline-none"
+                  className="mt-1 w-full rounded-xs border border-line bg-paper-card px-3.5 py-2.5 text-sm text-ink shadow-xs focus:border-ink focus:ring-1 focus:ring-ink focus:outline-none"
                 />
               </div>
 
@@ -524,17 +499,21 @@ export default function BookingClient({
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="border border-line bg-white px-4 py-2.5 text-xs font-mono text-reel hover:border-[#1D99DE] hover:text-[#1D99DE] text-center"
+                  className="rounded-md border border-line bg-paper-card px-4 py-2.5 text-xs font-mono text-ink hover:border-ink text-center cursor-pointer"
                 >
-                  ← Ubah Jumlah Tiket
+                  Ubah Jumlah Tiket
                 </button>
 
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="bg-[#D21871] px-8 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#B4115F] disabled:opacity-50 text-center"
+                  className="rounded-md px-8 py-2.5 font-mono text-xs font-medium uppercase tracking-wider shadow-xs transition-opacity hover:opacity-90 disabled:opacity-50 text-center cursor-pointer"
+                  style={{
+                    backgroundColor: palette.accent,
+                    color: palette.accentText,
+                  }}
                 >
-                  {isLoading ? "Memproses..." : "Bayar"}
+                  {isLoading ? "Memproses..." : "Lanjut ke Pembayaran"}
                 </button>
               </div>
             </form>
@@ -549,7 +528,7 @@ export default function BookingClient({
                 <span className="font-mono text-xs uppercase text-reel">
                   Kode Pemesanan: {booking.bookingCode}
                 </span>
-                <h2 className="font-display text-3xl font-bold text-ink">
+                <h2 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-ink">
                   Pembayaran QRIS
                 </h2>
               </div>
@@ -557,7 +536,7 @@ export default function BookingClient({
                 <span className="text-[10px] text-reel block uppercase">
                   Sisa Waktu
                 </span>
-                <span className="border border-[#F49924]/40 bg-[#F49924]/10 px-2.5 py-0.5 text-base font-bold text-[#A6610A]">
+                <span className="border border-line bg-paper-card px-2.5 py-0.5 text-base font-bold text-ink">
                   {timeLeft || "15:00"}
                 </span>
               </div>
@@ -565,21 +544,19 @@ export default function BookingClient({
 
             <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-12 items-start">
               {/* QR Code Presentation */}
-              <div className="md:col-span-6 flex flex-col items-center border border-line bg-white p-6 shadow-warm-lg">
+              <div className="md:col-span-6 flex flex-col items-center border border-line bg-paper-card p-6 shadow-[3px_3px_0px_0px_rgba(18,17,16,0.08)]">
                 <div className="w-full text-center border-b border-line pb-3">
                   <div className="flex items-center justify-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-[#1D99DE]" />
-                    <span className="font-display text-xl font-bold tracking-widest text-ink">
+                    <span className="font-mono text-xl font-bold tracking-widest text-ink">
                       QRIS
                     </span>
-                    <span className="h-2 w-2 rounded-full bg-[#D21871]" />
                   </div>
                   <p className="text-[10px] font-mono text-reel mt-0.5">
                     Pembayaran Standar Nasional
                   </p>
                 </div>
 
-                <div className="my-6 border-2 border-line p-3 bg-white shadow-inner">
+                <div className="my-6 border border-line p-3 bg-paper shadow-xs">
                   <QrCodeVisual
                     value={booking.qrisString}
                     size={220}
@@ -592,21 +569,20 @@ export default function BookingClient({
                   <span className="font-mono text-xs text-reel block">
                     Total Pembayaran ({booking.ticketCount} Tiket)
                   </span>
-                  <div className="mt-1 flex items-center justify-center gap-2 font-mono text-2xl font-bold text-ink">
-                    <span className="h-2 w-2 rounded-full bg-[#F49924]" />
+                  <div className="mt-1 font-mono text-2xl font-bold text-ink">
                     <span>Rp {booking.totalAmount.toLocaleString("id-ID")}</span>
                   </div>
                 </div>
 
                 <div className="mt-4 flex items-center gap-2 text-[11px] text-reel font-mono">
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#1D99DE] animate-pulse" />
+                  <span className="h-2 w-2 rounded-full bg-ink animate-pulse" />
                   <span>Menunggu konfirmasi pembayaran...</span>
                 </div>
 
                 <button
                   type="button"
                   onClick={checkStatus}
-                  className="mt-5 w-full border border-[#1D99DE] bg-[#1D99DE]/5 py-2 font-mono text-xs font-semibold text-[#1D99DE] transition-colors hover:bg-[#1D99DE] hover:text-white"
+                  className="mt-5 w-full rounded-md border border-line bg-paper py-2 font-mono text-xs font-medium text-ink transition-colors hover:border-ink hover:bg-ink hover:text-paper cursor-pointer"
                 >
                   Sudah Bayar? Cek Status Sekarang
                 </button>
@@ -614,11 +590,11 @@ export default function BookingClient({
 
               {/* Instructions & Test Simulator Panel */}
               <div className="md:col-span-6 space-y-6">
-                <div className="border border-line bg-white p-5 shadow-warm">
-                  <h3 className="font-mono text-xs font-bold uppercase text-ink">
+                <div className="border border-line bg-paper-card p-5 shadow-[2px_2px_0px_0px_rgba(18,17,16,0.06)]">
+                  <h3 className="font-mono text-xs font-semibold uppercase text-ink">
                     Petunjuk Pembayaran
                   </h3>
-                  <ol className="mt-3 space-y-2 text-xs text-reel">
+                  <ol className="mt-3 space-y-2 text-xs text-reel font-sans">
                     <li>1. Buka aplikasi perbankan atau e-wallet (BCA, GoPay, OVO, Dana).</li>
                     <li>2. Pilih menu Bayar atau Pindai QR.</li>
                     <li>3. Arahkan kamera ke kode QRIS di samping.</li>
@@ -628,17 +604,17 @@ export default function BookingClient({
                 </div>
 
                 {/* Testing Tool Box */}
-                <div className="border border-line bg-[#FAF8F5] p-5">
+                <div className="border border-line bg-paper p-5">
                   <div className="flex items-center justify-between border-b border-line pb-2">
-                    <span className="font-mono text-xs font-bold uppercase text-ink">
+                    <span className="font-mono text-xs font-semibold uppercase text-ink">
                       Simulasi Gateway (Mode Uji Coba)
                     </span>
-                    <span className="border border-[#1D99DE] bg-[#1D99DE]/10 px-1.5 py-0.5 font-mono text-[9px] font-bold text-[#1D99DE]">
+                    <span className="border border-line bg-paper-card px-1.5 py-0.5 font-mono text-[9px] font-bold text-reel">
                       TEST TOOL
                     </span>
                   </div>
 
-                  <p className="mt-2 text-xs text-reel leading-relaxed">
+                  <p className="mt-2 text-xs text-reel leading-relaxed font-sans">
                     Uji coba notifikasi webhook secara langsung untuk menyelesaikan transaksi:
                   </p>
 
@@ -647,7 +623,7 @@ export default function BookingClient({
                       type="button"
                       disabled={isSimulating}
                       onClick={() => triggerSimulation("settlement")}
-                      className="bg-[#1D99DE] py-2 text-xs font-semibold uppercase tracking-wider text-white shadow-sm hover:bg-[#1482BE] disabled:opacity-50"
+                      className="rounded-md bg-ink py-2 text-xs font-mono uppercase tracking-wider text-paper shadow-xs hover:bg-ink/90 disabled:opacity-50 cursor-pointer"
                     >
                       {isSimulating
                         ? "Mengirim Webhook..."
@@ -658,7 +634,7 @@ export default function BookingClient({
                       type="button"
                       disabled={isSimulating}
                       onClick={() => triggerSimulation("expire")}
-                      className="border border-line bg-white py-1.5 text-xs font-mono text-reel hover:border-ink hover:text-ink disabled:opacity-50"
+                      className="rounded-md border border-line bg-paper-card py-1.5 text-xs font-mono text-reel hover:border-ink hover:text-ink disabled:opacity-50 cursor-pointer"
                     >
                       Simulasikan Kedaluwarsa (Expired)
                     </button>
@@ -672,10 +648,10 @@ export default function BookingClient({
         {/* STEP 4: Perforated Digital Ticket Stub (Free-Seating) */}
         {step === 4 && booking && (
           <div className="mt-6 sm:mt-8">
-            <div className="border-2 border-line bg-white text-ink p-4 sm:p-8 relative shadow-warm-lg">
+            <div className="border border-line bg-paper-card text-ink p-4 sm:p-8 relative shadow-[4px_4px_0px_0px_rgba(18,17,16,0.12)] rounded-none">
               <div className="flex flex-col justify-between border-b border-line pb-4 sm:pb-6 sm:flex-row sm:items-baseline">
                 <div>
-                  <div className="flex items-center gap-1.5 mb-1">
+                  <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
                     <span className="h-2 w-2 rounded-full bg-[#1D99DE]" />
                     <span className="h-2 w-2 rounded-full bg-[#F49924]" />
                     <span className="h-2 w-2 rounded-full bg-[#D21871]" />
@@ -683,12 +659,12 @@ export default function BookingClient({
                       Tiket Masuk Resmi
                     </span>
                   </div>
-                  <h2 className="font-display text-2xl sm:text-4xl font-bold tracking-tight text-ink break-words">
+                  <h2 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-ink break-words">
                     BIOSKOP MINI CIKINI
                   </h2>
                 </div>
-                <span className="mt-2 sm:mt-0 inline-block border border-[#1D99DE] bg-[#1D99DE]/10 px-3 py-1 font-mono text-xs font-bold uppercase text-[#1277B0]">
-                  Lunas / QRIS Terkonfirmasi
+                <span className="mt-2 sm:mt-0 inline-block border border-[#1D99DE]/40 bg-[#1D99DE]/10 px-3 py-1 font-mono text-xs uppercase tracking-wider text-[#1277B0] font-bold">
+                  Lunas · QRIS Terkonfirmasi
                 </span>
               </div>
 
@@ -698,7 +674,7 @@ export default function BookingClient({
                     <span className="font-mono text-xs text-reel uppercase">
                       Film
                     </span>
-                    <h3 className="font-display text-xl sm:text-2xl font-bold text-ink">
+                    <h3 className="font-serif text-xl sm:text-2xl font-medium text-ink">
                       {booking.filmTitle || showtime.film.title}
                     </h3>
                   </div>
@@ -712,7 +688,7 @@ export default function BookingClient({
                     </div>
                     <div>
                       <span className="text-reel block font-mono">Pukul</span>
-                      <span className="font-mono font-bold text-ink">
+                      <span className="font-mono font-bold text-[#A6610A]">
                         {formatTime(showtime.startTime)} WIB
                       </span>
                     </div>
@@ -725,7 +701,7 @@ export default function BookingClient({
                     <div>
                       <span className="text-reel block font-mono">Jumlah Tiket</span>
                       <span className="font-mono text-base font-bold text-[#D21871]">
-                        {booking.ticketCount} Orang (Free-Seating)
+                        {booking.ticketCount} Kursi (Free-Seating)
                       </span>
                     </div>
                     <div>
@@ -745,7 +721,7 @@ export default function BookingClient({
 
                 {/* Perforated Stub QR code section */}
                 <div className="md:col-span-4 flex flex-col items-center justify-center border-t border-dashed border-line pt-6 md:border-t-0 md:border-l md:pl-6">
-                  <div className="border border-line p-2 bg-[#FAF8F5] shadow-sm">
+                  <div className="border border-line p-2 bg-paper shadow-xs">
                     <QrCodeVisual
                       value={`PASS-${booking.bookingCode}`}
                       size={130}
@@ -766,14 +742,18 @@ export default function BookingClient({
             <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 border-t border-line pt-6">
               <Link
                 href="/films"
-                className="text-center border border-line bg-white px-4 py-2.5 text-xs font-mono text-reel hover:border-[#1D99DE] hover:text-[#1D99DE]"
+                className="text-center rounded-md border border-line bg-paper-card px-4 py-2.5 text-xs font-mono text-ink hover:border-ink transition-colors"
               >
-                ← Kembali ke Katalog Film
+                Kembali ke Katalog Film
               </Link>
 
               <Link
                 href="/dashboard"
-                className="text-center bg-[#D21871] px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-[#B4115F]"
+                className="text-center rounded-md px-6 py-2.5 font-mono text-xs font-medium uppercase tracking-wider shadow-xs transition-opacity hover:opacity-90"
+                style={{
+                  backgroundColor: palette.accent,
+                  color: palette.accentText,
+                }}
               >
                 Buka Tiket Saya (Dashboard)
               </Link>
@@ -784,16 +764,19 @@ export default function BookingClient({
 
       {/* Order Sidebar */}
       <div className="lg:col-span-4">
-        <div className="border border-line bg-white p-5 sm:p-6 shadow-warm">
+        <div className="border border-line bg-paper-card p-5 sm:p-6 shadow-[3px_3px_0px_0px_rgba(18,17,16,0.06)]">
           <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#1D99DE]" />
-            <span className="font-mono text-xs font-bold uppercase text-reel">
+            <span
+              className="h-1.5 w-1.5 rounded-full"
+              style={{ backgroundColor: palette.accent }}
+            />
+            <span className="font-mono text-xs font-semibold uppercase tracking-wider text-reel">
               Ringkasan Tiket
             </span>
           </div>
 
           <div className="mt-4 flex gap-4">
-            <div className="aspect-[2/3] w-20 flex-shrink-0 overflow-hidden bg-ink">
+            <div className="aspect-[2/3] w-20 flex-shrink-0 overflow-hidden bg-ink rounded-none border border-line/60">
               <Image
                 src={showtime.film.posterUrl}
                 alt={showtime.film.title}
@@ -805,14 +788,13 @@ export default function BookingClient({
             </div>
 
             <div>
-              <h3 className="font-display text-xl font-bold text-ink">
+              <h3 className="font-serif text-xl font-medium text-ink">
                 {showtime.film.title}
               </h3>
               <p className="mt-1 font-mono text-xs text-reel">
-                {showtime.film.durationMinutes} Min | Klasifikasi{" "}
-                {showtime.film.rating}
+                {showtime.film.durationMinutes} Min | {showtime.film.rating}
               </p>
-              <p className="mt-2 text-xs text-reel">
+              <p className="mt-2 text-xs text-reel font-mono">
                 Studio: {showtime.auditorium}
               </p>
             </div>
@@ -847,8 +829,7 @@ export default function BookingClient({
 
           <div className="mt-6 border-t border-line pt-4 flex justify-between items-baseline">
             <span className="font-mono text-xs text-reel uppercase">Total</span>
-            <div className="flex items-center gap-1.5 font-mono text-xl font-bold text-ink">
-              <span className="h-2 w-2 rounded-full bg-[#F49924]" />
+            <div className="font-mono text-xl font-bold text-ink">
               <span>Rp {totalPrice.toLocaleString("id-ID")}</span>
             </div>
           </div>

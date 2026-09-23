@@ -67,10 +67,10 @@ export default function Navbar({ initialUser }: NavbarProps) {
             <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-[#D21871] transition-transform group-hover:scale-110" />
           </div>
           <div className="flex items-baseline gap-1.5 sm:gap-2">
-            <span className="font-display text-xl sm:text-2xl font-bold tracking-tight text-ink transition-colors group-hover:text-[#D21871]">
+            <span className="font-serif text-xl sm:text-2xl font-medium tracking-tight text-ink transition-colors group-hover:text-[#D21871]">
               BIOSKOP MINI
             </span>
-            <span className="text-[10px] sm:text-xs uppercase tracking-widest text-reel">
+            <span className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-reel">
               Cikini
             </span>
           </div>
@@ -80,13 +80,13 @@ export default function Navbar({ initialUser }: NavbarProps) {
         <nav className="hidden sm:flex items-center gap-4 text-sm font-medium">
           <Link
             href="/films"
-            className="text-ink transition-colors hover:text-[#1D99DE]"
+            className="text-reel transition-colors hover:text-[#1D99DE]"
           >
             Program Film
           </Link>
           <Link
             href="/about"
-            className="text-ink transition-colors hover:text-[#1D99DE]"
+            className="text-reel transition-colors hover:text-[#1D99DE]"
           >
             Tentang
           </Link>
@@ -99,13 +99,13 @@ export default function Navbar({ initialUser }: NavbarProps) {
             <div className="flex items-center gap-3">
               <Link
                 href="/login"
-                className="text-xs font-semibold text-ink transition-colors hover:text-[#1D99DE]"
+                className="font-mono text-xs text-reel transition-colors hover:text-[#1D99DE]"
               >
                 Masuk
               </Link>
               <Link
                 href="/dashboard"
-                className="rounded border border-[#D21871] bg-white px-3.5 py-1.5 text-xs font-semibold tracking-wide text-[#D21871] shadow-sm transition-all hover:bg-[#D21871] hover:text-white"
+                className="rounded-md border border-[#D21871] bg-paper-card px-3.5 py-1.5 font-mono text-xs font-semibold tracking-wide text-[#D21871] shadow-xs transition-all hover:bg-[#D21871] hover:text-white"
               >
                 Tiket Saya
               </Link>
@@ -121,7 +121,7 @@ export default function Navbar({ initialUser }: NavbarProps) {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
             aria-expanded={mobileMenuOpen}
-            className="flex h-9 w-9 items-center justify-center rounded border border-line bg-white text-ink transition-colors hover:border-[#1D99DE]"
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-line bg-paper-card text-ink transition-colors hover:border-[#1D99DE]"
           >
             {mobileMenuOpen ? (
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -138,12 +138,12 @@ export default function Navbar({ initialUser }: NavbarProps) {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="sm:hidden border-t border-line bg-paper px-5 py-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="sm:hidden border-t border-line bg-paper px-5 py-4 shadow-md animate-in fade-in slide-in-from-top-2 duration-200">
           <nav className="flex flex-col space-y-3 font-medium">
             <Link
               href="/films"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-end border-b border-line/60 pb-2.5 text-right text-sm text-ink hover:text-[#1D99DE]"
+              className="flex items-center justify-end border-b border-line/60 pb-2.5 text-right text-sm text-reel hover:text-[#1D99DE]"
             >
               <span>Program Film & Jadwal</span>
             </Link>
@@ -151,7 +151,7 @@ export default function Navbar({ initialUser }: NavbarProps) {
             <Link
               href="/about"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-end border-b border-line/60 pb-2.5 text-right text-sm text-ink hover:text-[#1D99DE]"
+              className="flex items-center justify-end border-b border-line/60 pb-2.5 text-right text-sm text-reel hover:text-[#1D99DE]"
             >
               <span>Tentang Bioskop</span>
             </Link>
@@ -159,17 +159,17 @@ export default function Navbar({ initialUser }: NavbarProps) {
             <Link
               href="/dashboard"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-end border-b border-line/60 pb-2.5 text-right text-sm text-ink hover:text-[#D21871]"
+              className="flex items-center justify-end border-b border-line/60 pb-2.5 text-right text-sm text-reel hover:text-[#D21871]"
             >
               <span>Tiket Saya</span>
             </Link>
 
             {user ? (
               <div className="pt-2">
-                <div className="rounded border border-line bg-white p-3 shadow-sm">
+                <div className="rounded-md border border-line bg-paper-card p-3 shadow-xs">
                   <div className="flex items-center justify-end gap-2.5">
                     <div className="min-w-0 text-right">
-                      <p className="truncate text-xs font-bold text-ink">{user.name}</p>
+                      <p className="truncate text-xs font-medium text-ink">{user.name}</p>
                       <p className="truncate font-mono text-[10px] text-reel">{user.email}</p>
                     </div>
                     <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1D99DE] font-mono text-xs font-bold text-white">
@@ -179,7 +179,7 @@ export default function Navbar({ initialUser }: NavbarProps) {
                   <button
                     type="button"
                     onClick={handleMobileLogout}
-                    className="mt-3 w-full border-t border-line pt-2 text-right font-mono text-xs text-reel hover:text-[#D21871]"
+                    className="mt-3 w-full border-t border-line pt-2 text-right font-mono text-xs text-reel hover:text-[#D21871] cursor-pointer"
                   >
                     Keluar
                   </button>
@@ -190,14 +190,14 @@ export default function Navbar({ initialUser }: NavbarProps) {
                 <Link
                   href="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-center border border-line bg-white py-2.5 text-center text-xs font-semibold text-ink shadow-sm hover:border-[#1D99DE]"
+                  className="flex items-center justify-center border border-line bg-paper-card py-2.5 rounded-md text-center font-mono text-xs font-medium text-ink shadow-xs hover:border-[#1D99DE]"
                 >
                   Masuk Akun
                 </Link>
                 <Link
                   href="/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-center bg-[#D21871] py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-white shadow-sm hover:bg-[#B4115F]"
+                  className="flex items-center justify-center bg-[#D21871] py-2.5 rounded-md text-center font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-xs hover:bg-[#B4115F]"
                 >
                   Daftar
                 </Link>
